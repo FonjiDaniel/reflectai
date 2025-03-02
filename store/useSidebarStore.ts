@@ -29,10 +29,10 @@ export const useSidebarStore = create<SidebarState>()(
         set({ isLoading: true });
         
         try {
-          // Simulate API call with timeout
+        
           await new Promise(resolve => setTimeout(resolve, 1500));
           
-          // Mock data - replace with your actual API call
+
           const entries: LibraryEntry[] = [
             { id: '1', title: 'Fiction Books', icon: null },
             { id: '2', title: 'Non-Fiction Collection', icon: null },
@@ -43,7 +43,7 @@ export const useSidebarStore = create<SidebarState>()(
           
           set({ libraryEntries: entries, isLoading: false });
           
-          // Set active entry from URL if none is selected
+         
           const { activeEntryId } = get();
           if (!activeEntryId && typeof window !== 'undefined') {
             const pathname = window.location.pathname;
@@ -59,11 +59,11 @@ export const useSidebarStore = create<SidebarState>()(
       },
     }),
     {
-      name: 'sidebar-storage', // name of the item in localStorage
+      name: 'sidebar-storage', 
       partialize: (state) => ({ 
         isCollapsed: state.isCollapsed, 
         activeEntryId: state.activeEntryId 
-      }), // only persist these fields
+      }), 
     }
   )
 );
