@@ -48,12 +48,13 @@ const OnboardingDialog = () => {
 
     const { question, answers: possibleAnswers } = getQuestion();
 
-    const handleAnswerSelection = (answer: string) => {
-        setAnswer(step, answer); // Store selected answer
+    const handleAnswerSelection = async (answer: string) => {
+        setAnswer(step, answer);
         if (step < 3) {
             setStep(step + 1);
         } else {
-            setOpen(false); // Close modal when last step is completed
+
+            setOpen(false);
         }
     };
 
@@ -73,8 +74,8 @@ const OnboardingDialog = () => {
                         return (
                             <Button
                                 key={index}
-                                className={`w-full p-10 border hover:bg-gray-900 mb-2 shadow-lg border-white 
-                  ${isSelected ? "bg-gray-700 text-white border-white" : "bg-black-100 text-gray-300"}`}
+                                className={`w-full p-10 border hover:bg-gray-900 mb-2 shadow-lg border-gray-600 
+                  ${isSelected ? "bg-gray-700 text-white border-gray-500 inset-ring-2 inset-ring-blue-500   shadow-purple-500/50"   : "bg-black-100 text-gray-300"}`}
                                 onClick={() => handleAnswerSelection(answer)}
                             >
                                 {answer}
@@ -86,12 +87,12 @@ const OnboardingDialog = () => {
                 <AlertDialogFooter >
                     <div className="flex justify-between w-full">
                         <AlertDialogCancel onClick={() => reset()}>
-                            Back
+                          cancel
                         </AlertDialogCancel>
 
                         {step > 1 && (
                             <AlertDialogCancel onClick={() => step > 0 ? setStep(step - 1) : null}>
-                               confirm
+                              back
                             </AlertDialogCancel>
                         )}
                     </div>
