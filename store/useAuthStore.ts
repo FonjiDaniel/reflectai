@@ -1,39 +1,42 @@
-import { create } from 'zustand';
-import { persist, PersistStorage, StorageValue } from 'zustand/middleware';
+import { create , StateCreator} from 'zustand';
+import { persist, PersistOptions, } from 'zustand/middleware';
+import { User } from '@/types/index';
 
 interface AuthState {
-  currentUser: { name: string; email: string; token: string } | null;
-  isLoggedIn: boolean;
-  login: (name: string, email: string, token: string) => void;
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  setAuth: (user: User, token: string) => void;
   logout: () => void;
 }
 
-// Custom sessionStorage wrapper for Zustand
-const sessionStorageProvider: PersistStorage<AuthState> = {
-  getItem: (name) => {
-    const value = sessionStorage.getItem(name);
-    return value ? JSON.parse(value) : null;
-  },
-  setItem: (name, value: StorageValue<AuthState>) => {
-    sessionStorage.setItem(name, JSON.stringify(value));
-  },
-  removeItem: (name) => {
-    sessionStorage.removeItem(name);
-  },
-};
+type AuthPersist = (
+  config: StateCreator<AuthState>,
+  options: PersistOptions<AuthState>
+) => StateCreator<AuthState>;
 
-export const useAuthStore = create<AuthState>()(
-  persist(
+export const useAuthStore = create<AuthState>(
+  (persist as AuthPersist)(
     (set) => ({
-      currentUser: null,
-      isLoggedIn: false,
-      login: (name, email, token) =>
-        set({ currentUser: { name, email, token }, isLoggedIn: true }),
-      logout: () => set({ currentUser: null, isLoggedIn: false }),
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      
+
+      setAuth: (user: User, token: string) => set({ 
+        user, 
+        token, 
+        isAuthenticated: !!token 
+      }),
+      
+      logout: () => set({ 
+        user: null, 
+        token: null, 
+        isAuthenticated: false 
+      }),
     }),
     {
       name: 'auth-storage',
-      storage: sessionStorageProvider, // Corrected storage implementation
     }
   )
 );

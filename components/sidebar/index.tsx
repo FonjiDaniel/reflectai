@@ -1,20 +1,53 @@
-// components/Sidebar/index.tsx
+
 "use client"
 import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, ChevronLeft, Home, Settings, Plus, Book } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ChevronDown, Home, Settings, Plus, Book } from 'lucide-react';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { LibraryEntry } from '@/types/index';
 import ShimmerEffect from '@/components/sidebar/ShimmerEffect';
-import { useUser } from '@clerk/nextjs';
 import { getInitials } from '@/lib/utils';
+import { useAuthStore } from "@/store/useAuthStore"
+import { useAuth } from "@clerk/nextjs"
+
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
 
 const Sidebar = () => {
+    const { user } = useAuthStore();
+    const { logout } = useAuthStore();
+    const { signOut } = useAuth();
+
+    const handleLogout = () => {
+        try {
+            logout();
+
+            signOut();
+
+        } catch (er) {
+            console.log(er);
+        }
+
+    }
+    console.log(user);
+
     const path = usePathname();
     const router = useRouter();
-    const {isLoaded, user } = useUser();
     console.log(path);
+
 
     const {
         isCollapsed,
@@ -32,11 +65,11 @@ const Sidebar = () => {
 
     useEffect(() => {
         const match = path.match(/\/([^:]+)/);
-        
+
         if (match && match[1]) {
-          setActiveEntry(match[1]);
+            setActiveEntry(match[1]);
         }
-      }, [path, setActiveEntry]);
+    }, [path, setActiveEntry]);
 
     const handleEntryClick = (entry: LibraryEntry) => {
         setActiveEntry(entry.id);
@@ -101,14 +134,12 @@ const Sidebar = () => {
                 {/* Library Entries List with Shimmer */}
                 <div className="mt-1">
                     {isLoading ? (
-                        // Shimmer Loading Effect
                         <>
                             {!isCollapsed && Array(5).fill(0).map((_, index) => (
                                 <ShimmerEffect key={index} />
                             ))}
                         </>
                     ) : (
-                        // Actual Library Entries
                         <>
                             {libraryEntries.map((entry) => (
                                 <div
@@ -137,22 +168,48 @@ const Sidebar = () => {
             </div>
 
             {/* User Section */}
-            <div className="p-4 border-t border-[#e6e6e6] flex items-center">
+            <div className="p-4 border-t border-[#e6e6e6] flex items-center justify-between">
                 <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-xs text-gray-600">
-                    {getInitials(user?.fullName || "UserName Name")}
+                    {getInitials(user?.name || "UserName Name")}
                 </div>
                 {!isCollapsed && (
-                    isLoaded ? 
                     <div className="ml-2">
-                        <div className="text-sm font-medium text-gray-800">{user?.fullName}</div>
-                        <div className="text-xs text-gray-500">{user?.emailAddresses[0].emailAddress}</div>
-                    </div> : 
-                    <div>
-                        <ShimmerEffect />
+                        <div className="text-sm font-medium text-gray-800">{user?.name}</div>
+                        <div className="text-xs text-gray-500">{user?.email}</div>
                     </div>
+
                 )}
+                {!isCollapsed && (
+
+                    <DropdownMenu >
+                        <DropdownMenuTrigger asChild>
+                            <Button className='border-none bg-[#fbfbfa]' variant={'outline'} ><ChevronDown /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-60">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>
+                                    Profile
+                                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Settings
+                                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={handleLogout}>
+                                Logout
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
+
             </div>
+
         </div>
+
     );
 };
 

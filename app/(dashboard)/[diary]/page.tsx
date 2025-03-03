@@ -1,6 +1,7 @@
 import Tiptap from "@/components/Editor";
 import React from "react";
 
+
 type Diary = { title: string; content: string };
 
 const diaries: { [key: string]: Diary } = {
@@ -9,16 +10,14 @@ const diaries: { [key: string]: Diary } = {
   "3": { title: "Financial Goals for 2025", content: "I want to achieve financial freedom..." },
 };
 
-export default async function Page({ params}: {params: Promise<{ diary: string }>}) {
-  const path =  (await params)?.diary ;
+export default async function Page({ params }: { params: Promise<{ diary: string }> }) {
+  const path = (await params)?.diary;
   console.log(path);
-
-  // const diary = diaries[path];
 
 
   return (
     <div>
-      <Tiptap/>
+      <Tiptap />
       <h1 className="text-2xl font-bold">{diaries[1].title}</h1>
       <p className="mt-4 text-gray-600">{diaries[1].content}</p>
     </div>
