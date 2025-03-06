@@ -24,3 +24,34 @@ export interface LibraryEntry {
     };
   }
   
+
+  export interface createLibraryProps {
+
+    title: string,
+    description: string, 
+    createdBy: string,
+    parentId?: string,
+    icon?: React.ReactNode,
+    color?: string,
+   
+  }
+
+
+  export interface Library {
+    id: string;
+    title: string;
+    description: string;
+    icon: string | null;
+    color: string | null;
+    created_at: string; // ISO date string
+    updated_at: string; // ISO date string
+    created_by: string;
+    last_edited_by: string | null;
+    parent_id: string | null;
+    display_order: number;
+    is_public: boolean;
+    ai_generated: boolean;
+    ai_prompt: string | null;
+    ai_settings: any | null; // Adjust type if ai_settings has a defined structure
+  }
+  

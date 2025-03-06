@@ -1,6 +1,6 @@
 "use client"
 import React, { ReactNode, JSX } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useMyAuth } from '@/hooks/useAuth';
 import FullPageLoader from './Loader';
 
 
@@ -10,7 +10,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const { isLoading } = useAuth();
+  const { isLoading } = useMyAuth();
   
   if (isLoading) {
     return <FullPageLoader/>

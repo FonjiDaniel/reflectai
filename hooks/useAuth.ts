@@ -13,7 +13,7 @@ interface UseAuthReturn {
   logout: () => void;
 }
 
-export function useAuth(): UseAuthReturn {
+export function useMyAuth(): UseAuthReturn {
   const { isSignedIn, isLoaded } = useClerkAuth();
   const { setAuth, user, token, isAuthenticated, logout } = useAuthStore();
   

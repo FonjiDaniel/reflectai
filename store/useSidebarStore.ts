@@ -1,11 +1,9 @@
-// stores/sidebarStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { LibraryEntry } from '@/types';
 
 interface SidebarState {
   isCollapsed: boolean;
-  isLoading: boolean;
   libraryEntries: LibraryEntry[];
   activeEntryId: string | null;
   toggleSidebar: () => void;
@@ -17,7 +15,6 @@ export const useSidebarStore = create<SidebarState>()(
   persist(
     (set, get) => ({
       isCollapsed: false,
-      isLoading: true,
       libraryEntries: [],
       activeEntryId: null,
       
@@ -26,7 +23,6 @@ export const useSidebarStore = create<SidebarState>()(
       setActiveEntry: (id: string) => set({ activeEntryId: id }),
       
       fetchLibraryEntries: async () => {
-        set({ isLoading: true });
         
         try {
         
@@ -41,7 +37,7 @@ export const useSidebarStore = create<SidebarState>()(
             { id: '5', title: 'Magazines', icon: null },
           ];
           
-          set({ libraryEntries: entries, isLoading: false });
+          set({ libraryEntries: entries, });
           
          
           const { activeEntryId } = get();
@@ -54,7 +50,6 @@ export const useSidebarStore = create<SidebarState>()(
           }
         } catch (error) {
           console.error('Error fetching library entries:', error);
-          set({ isLoading: false });
         }
       },
     }),

@@ -1,25 +1,24 @@
-import Tiptap from "@/components/Editor";
-import React from "react";
+"use client"
+import React, { useEffect } from "react";
+import TailwindAdvancedEditor from "@/components/editor/editor";
+import { ModeToggle } from "@/components/ModeToggle";
 
 
-type Diary = { title: string; content: string };
+export default function Page({ params }: { params: Promise<{ diary: string }> }) {
+  // const [content, setContent] = React.useState<string | undefined>('initialcontent');
 
-const diaries: { [key: string]: Diary } = {
-  "1": { title: "My First Diary Entry", content: "This is my first entry..." },
-  "2": { title: "Reflections on AI", content: "AI is transforming the world..." },
-  "3": { title: "Financial Goals for 2025", content: "I want to achieve financial freedom..." },
-};
-
-export default async function Page({ params }: { params: Promise<{ diary: string }> }) {
-  const path = (await params)?.diary;
-  console.log(path);
+  useEffect(() => {
+    const fetchDiary = async () => {
+      const path = (await params)?.diary;
+      console.log(path);
+    };
+    fetchDiary();
+  },)
 
 
   return (
-    <div>
-      <Tiptap />
-      <h1 className="text-2xl font-bold">{diaries[1].title}</h1>
-      <p className="mt-4 text-gray-600">{diaries[1].content}</p>
+    <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-10">
+      <TailwindAdvancedEditor />
     </div>
   );
 }
