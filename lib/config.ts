@@ -1,11 +1,17 @@
 interface Config {
-    authBaseUrl: string;
-    databaseUrl: string
-    libraryUrl: string
+    openAiKey: string,
+    backendBaseUrl: string,
+    cloudinaryCloudName: string,
+    cloudinaryApiKey: string,
+    cloudinaryApiSecret : string, 
+
 }
 
 export const config: Config = {
-    authBaseUrl: process.env.AUTH_BASE_URL!,
-    databaseUrl: process.env.DATABASE_URL!,
-    libraryUrl: process.env.DATABASE_LIBRARY_URL!
+    openAiKey: process.env.OPEN_AI_SECRET!,
+    backendBaseUrl: process.env.NEXT_PUBLIC_BACKEND_BASE_URL!,
+    cloudinaryCloudName : process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
+    cloudinaryApiKey : process.env.CLOUDINARY_API_KEY!,
+    cloudinaryApiSecret : process.env.CLOUDINARY_API_SECRET!
+
 };

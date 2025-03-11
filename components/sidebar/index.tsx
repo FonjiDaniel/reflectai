@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, ChevronLeft, ChevronDown, Home, Settings, Plus, Book, Divide } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ChevronDown, Home, Settings, Plus, Book } from 'lucide-react';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { Library, LibraryEntry } from '@/types/index';
 import ShimmerEffect from '@/components/sidebar/ShimmerEffect';
@@ -92,25 +92,27 @@ const Sidebar = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-          if (token && user?.id) {
-            console.log("Starting to fetch diary entries");
-            setIsLoading(true);
-            try {
-              const diary = await getLibraries(token, user.id);
-              console.log("Received diary entries:", diary);
-              setDiaries(diary);
-            } catch (err) {
-              console.error("Error in fetchDiaryEntries:", err);
-            } finally {
-              setIsLoading(false);
+            if (token && user?.id) {
+                console.log("Starting to fetch diary entries");
+                setIsLoading(true);
+                try {
+                    const diary = await getLibraries(token, user.id);
+                    console.log("Received diary entries:", diary);
+                    setDiaries(diary);
+                } catch (err) {
+                    console.error("Error in fetchDiaryEntries:", err);
+                    setDiaries([])
+                } finally {
+                    setIsLoading(false);
+                
+                }
+            } else {
+                console.log("Missing token or user ID for fetching diaries");
             }
-          } else {
-            console.log("Missing token or user ID for fetching diaries");
-          }
         };
-      
+
         fetchData();
-      }, [token, user?.id]);
+    }, [token, user?.id]);
 
 
 
@@ -124,7 +126,7 @@ const Sidebar = () => {
 
     const handleEntryClick = (entry: LibraryEntry) => {
         setActiveEntry(entry.id);
-        router.push(`/${entry.id}:${entry.title.replace(/\s+/g, '-').toLowerCase()}`);
+        router.push(`/${entry.id}`);
     };
 
 
@@ -143,7 +145,7 @@ const Sidebar = () => {
 
     return (
         <div
-            className={`flex flex-col h-screen bg-[#212121] border-r border-[#3b3a3a]  text-[#817f7f] transition-all duration-200 ${isCollapsed ? 'w-14' : 'w-64'
+            className={`flex flex-col h-screen bg-[#212121] border-r border-[#3b3a3a]  text-[#a8a5a5] transition-all duration-200 ${isCollapsed ? 'w-14' : 'w-64'
                 }`}
         >
             {/* Sidebar Header */}
@@ -169,7 +171,7 @@ const Sidebar = () => {
             {/* Navigation Links */}
             <div className="py-2">
                 <Link
-                    href="/"
+                    href="/home"
                     className="flex items-center px-4 py-2  hover:bg-[#312f2f] transition-colors"
                 >
                     <Home className="h-4 w-4 mr-2" />
@@ -186,6 +188,7 @@ const Sidebar = () => {
 
             {/* Library Entries Section */}
             <div className="flex-1 overflow-y-auto">
+
                 {/* Section Header */}
                 <div className="px-4 py-2 flex items-center justify-between">
                     {!isCollapsed && <span className="text-xs font-medium text-gray-500">LIBRARIES</span>}
@@ -235,7 +238,7 @@ const Sidebar = () => {
                     )}
                 </div>
 
-                {/* Library Entries List with Shimmer */}
+                {/* Library Entries Section */}
                 <div className="mt-1">
                     {isLoading ? (
                         <>
@@ -243,32 +246,34 @@ const Sidebar = () => {
                                 <ShimmerEffect key={index} />
                             ))}
                         </>
-                        ) : (
-                            <>
-                                {diaries?.map((entry) => (
-                                    <div
-                                        key={entry.id}
-                                        onClick={() => handleEntryClick(entry)}
-                                        className={`flex items-center px-4 py-2 rounded cursor-pointer transition-colors ${activeEntryId === entry.id ? 'bg-[#312f2f] text-white' : 'hover:bg-[#312f2f]'
-                                            }`}
-                                    >
-                                        {!isCollapsed ? (
-                                            <>
-                                                <div className="mr-2 ">
-                                                    {entry.icon || <Book className="h-4 w-4" />}
-                                                </div>
-                                                <span className="text-sm truncate">{entry.title}</span>
-                                            </>
-                                        ) : (
-                                            <div className="mx-auto">
+                    ) : (
+                        <>
+                            {diaries && diaries.length > 0 ? diaries?.map((entry) => (
+                                <div
+                                    key={entry.id}
+                                    onClick={() => handleEntryClick(entry)}
+                                    className={`flex items-center px-4 py-2 rounded cursor-pointer transition-colors ${activeEntryId === entry.id ? 'bg-[#312f2f] text-white' : 'hover:bg-[#312f2f]'
+                                        }`}
+                                >
+                                    {!isCollapsed ? (
+                                        <>
+                                            <div className="mr-2 ">
                                                 {entry.icon || <Book className="h-4 w-4" />}
                                             </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </div>
+                                            <span className="text-sm truncate">{entry.title}</span>
+                                        </>
+                                    ) : (
+                                        <div className="mx-auto">
+                                            {entry.icon || <Book className="h-4 w-4" />}
+                                        </div>
+                                    )}
+                                </div>
+                            )): <div className='flex p-5'>
+                                No libraries found
+                                </div>}
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* User Section */}

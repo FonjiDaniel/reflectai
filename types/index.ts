@@ -55,3 +55,12 @@ export interface LibraryEntry {
     ai_settings: any | null; // Adjust type if ai_settings has a defined structure
   }
   
+
+
+  export interface CloudinaryUploadResult {
+    secure_url: string;
+    bytes: number;
+    width: number;
+    height: number;
+    public_id: string;
+  }

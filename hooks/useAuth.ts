@@ -36,7 +36,7 @@ export function useMyAuth(): UseAuthReturn {
         const data = await response.json() as AuthResponse;
         
         if (data.success && data.data?.token && data.data?.user) {
-          setAuth(data.data.user, data.data.token);
+          setAuth(data.data.user, data.data.token);       
           console.log(data.data.token);
           console.log(data.message);
         } else {

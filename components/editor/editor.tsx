@@ -29,10 +29,14 @@ import { TextButtons } from "./selectors/text-buttons";
 import { slashCommand, suggestionItems } from "./slash-command";
 
 import hljs from "highlight.js";
+import { updateLibraryContent } from "@/lib/actions/library";
+import { useMyAuth } from "@/hooks/useAuth";
 
 const extensions = [...defaultExtensions, slashCommand];
 
-const TailwindAdvancedEditor = () => {
+const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
+  const { token, user } = useMyAuth();
+
   const [initialContent, setInitialContent] = useState<null | JSONContent>(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [charsCount, setCharsCount] = useState();
@@ -53,28 +57,52 @@ const TailwindAdvancedEditor = () => {
     return new XMLSerializer().serializeToString(doc);
   };
 
+
+
+
+
+
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
-    const json = editor.getJSON();
+    const json = JSON.stringify(editor.getJSON());
+    console.log(initialValue.id);
+    console.log(json);
+    console.log("updated value is : ", editor.getJSON())
+    await updateLibraryContent(initialValue.id, token, initialValue.title, editor.getJSON());
+
+
+
+
     setCharsCount(editor.storage.characterCount?.words() || 0);
-    
+
     window.localStorage.setItem("html-content", highlightCodeblocks(editor.getHTML()));
-    window.localStorage.setItem("novel-content", JSON.stringify(json));
+    window.localStorage.setItem("novel-content", json);
     console.log(JSON.parse(window.localStorage.getItem("novel-content")));
-  
+
     // Ensure markdown storage exists before using it
     if (editor.storage.markdown) {
       window.localStorage.setItem("markdown", editor.storage.markdown.getMarkdown());
     }
-  
+
     setSaveStatus("Saved");
   }, 500);
-  
+
 
   useEffect(() => {
-    const content = window.localStorage.getItem("novel-content");
-    if (content) setInitialContent(JSON.parse(content));
-    else setInitialContent(defaultEditorContent);
-  }, []);
+    if (initialValue && initialValue.content) {
+      console.log("Setting initial content from initialValue:", initialValue.content);
+      setInitialContent(initialValue.content);
+    } else {
+      const storedContent = window.localStorage.getItem("novel-content");
+      if (storedContent) {
+        console.log("Setting initial content from localStorage");
+        setInitialContent(JSON.parse(storedContent));
+      } else {
+        console.log("Setting initial content to defaultEditorContent");
+        setInitialContent(defaultEditorContent);
+      }
+    }
+  }, [initialValue]);
+
 
   if (!initialContent) return null;
 
@@ -112,7 +140,7 @@ const TailwindAdvancedEditor = () => {
             <EditorCommandEmpty className="px-2 text-muted-foreground">No results</EditorCommandEmpty>
             <EditorCommandList className="bg-[#212121]">
               {suggestionItems.map((item) => (
-                <EditorCommandItem 
+                <EditorCommandItem
                   value={item.title}
                   onCommand={(val) => item.command && item.command(val)}
                   className="flex w-full  items-center   space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-[#312f2f] "

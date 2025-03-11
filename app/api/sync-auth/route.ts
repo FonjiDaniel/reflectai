@@ -31,7 +31,7 @@ export async function GET(): Promise<NextResponse<AuthResponse>> {
       );
     }
     
-    const response = await fetch(config.authBaseUrl, {
+    const response = await fetch(`${config.backendBaseUrl}/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

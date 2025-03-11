@@ -42,7 +42,7 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
               const text = editor.storage.markdown.serializer.serialize(slice.content);
               onSelect(text, value);
             }}
-            className="flex gap-2 px-4"
+            className="flex gap-2 px-4 text-gray-300 hover:bg-[#d71414]"
             key={option.value}
             value={option.value}
           >
