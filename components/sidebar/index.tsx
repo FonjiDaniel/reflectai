@@ -1,22 +1,15 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, ChevronLeft, ChevronDown, Home, Settings, Plus, Book } from 'lucide-react';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { Library, LibraryEntry } from '@/types/index';
+import { Library } from '@/types/index';
 import ShimmerEffect from '@/components/sidebar/ShimmerEffect';
 import { getInitials } from '@/lib/utils';
 import { useMyAuth } from "@/hooks/useAuth"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { createLibrary, getLibraries } from '@/lib/actions/library';
+import { createLibrary, } from '@/lib/actions/library';
 import { useAuth } from '@clerk/nextjs';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -29,15 +22,11 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 
 
 const Sidebar = () => {
-    const [title, setTitle] = useState<string>('');
-    const [isCreating, setIsCreating] = useState<boolean>(false);
-    const [description, setDescription] = useState<string>('');
-    const [diaries, setDiaries] = useState<Library[]>();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { logout, user, token } = useMyAuth();
     const { signOut } = useAuth();
@@ -47,9 +36,21 @@ const Sidebar = () => {
     const router = useRouter();
     console.log(path);
 
+
+    const {
+        isCollapsed,
+        activeEntryId,
+        diaryEntries,
+        toggleSidebar,
+        setActiveEntry,
+        fetchDiaryEntries,
+        loadingDiaries,
+        setdiaries
+    } = useSidebarStore();
+
     const libraryData = {
-        title,
-        description,
+        title: "New page",
+        description: "null",
         createdBy: user?.id || ''
     };
 
@@ -61,54 +62,29 @@ const Sidebar = () => {
             return;
         }
 
-        setIsCreating(true);
-
         try {
-            console.log(title, description, user)
+            console.log(user)
             const newLibrary = await createLibrary(
                 libraryData,
                 token,
             );
 
             console.log('Library created:', newLibrary);
-            setTitle('');
-            setDescription('');
+            setdiaries(newLibrary);
+            setActiveEntry(newLibrary.id);
+            router.push(`/${newLibrary.id}`)
         } catch (error) {
             console.error('Failed to create library', error);
-        } finally {
-            setIsCreating(false);
         }
     };
 
 
 
-    const {
-        isCollapsed,
-        activeEntryId,
-        toggleSidebar,
-        setActiveEntry,
-    } = useSidebarStore();
 
 
     useEffect(() => {
         const fetchData = async () => {
-            if (token && user?.id) {
-                console.log("Starting to fetch diary entries");
-                setIsLoading(true);
-                try {
-                    const diary = await getLibraries(token, user.id);
-                    console.log("Received diary entries:", diary);
-                    setDiaries(diary);
-                } catch (err) {
-                    console.error("Error in fetchDiaryEntries:", err);
-                    setDiaries([])
-                } finally {
-                    setIsLoading(false);
-                
-                }
-            } else {
-                console.log("Missing token or user ID for fetching diaries");
-            }
+            await fetchDiaryEntries(user?.id, token);
         };
 
         fetchData();
@@ -124,7 +100,7 @@ const Sidebar = () => {
         }
     }, [path, setActiveEntry]);
 
-    const handleEntryClick = (entry: LibraryEntry) => {
+    const handleEntryClick = (entry: Library) => {
         setActiveEntry(entry.id);
         router.push(`/${entry.id}`);
     };
@@ -151,9 +127,12 @@ const Sidebar = () => {
             {/* Sidebar Header */}
             <div className="p-4 flex items-center justify-between border-b border-[#3b3a3a]">
                 {!isCollapsed && (
-                    <div className="flex items-center space-x-2">
-                        <Book className="h-5 w-5 text-gray-600" />
-                        <span className="font-medium">AI Library</span>
+                    <div className="flex items-center space-x-2 justify-center">
+                        <Avatar>
+                            <AvatarImage className="" src="https://res.cloudinary.com/dwg1nr3cj/image/upload/v1741961733/reflectai%20Images/Untitled%20design%20%289%29.png" />
+                        </Avatar>
+
+                        <span className="font-bold text-2xl">Reflect</span>
                     </div>
                 )}
                 <button
@@ -191,56 +170,13 @@ const Sidebar = () => {
 
                 {/* Section Header */}
                 <div className="px-4 py-2 flex items-center justify-between">
-                    {!isCollapsed && <span className="text-xs font-medium text-gray-500">LIBRARIES</span>}
-                    {!isCollapsed && (
-
-
-                        <Popover>
-                            <PopoverTrigger asChild className='border-[#3b3a3a] bg-[#212121] hover:bg-[#312f2f] '>
-                                <Button variant="outline"><Plus className="h-3 w-3 " /></Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-80 ">
-                                <div className="grid gap-4">
-                                    <div className="space-y-2">
-                                        <h4 className="font-medium leading-none">Create a new Diary</h4>
-                                        <p className="text-sm text-muted-foreground">
-                                            Start with title and description to continue
-                                        </p>
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <div className="grid grid-cols-3 items-center gap-4">
-                                            <Label htmlFor="title">title</Label>
-                                            <Input
-                                                id="title"
-                                                defaultValue=""
-                                                className="col-span-2 h-8"
-                                                onChange={(e) => setTitle(e.target.value)}
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-3 items-center gap-4">
-                                            <Label htmlFor="description">Description</Label>
-                                            <Input
-                                                id="description"
-                                                defaultValue=""
-                                                className="col-span-2 h-8"
-                                                onChange={(e) => setDescription(e.target.value)}
-                                            />
-                                        </div>
-                                        <div className='flex justify-center'>
-                                            <Button onClick={handleCreateLibrary}>
-                                                {isCreating ? "creating...." : "create"}
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                    )}
+                    {!isCollapsed && <span className="text-xs font-medium text-gray-500">Recent diaries</span>}
+                    {!isCollapsed && <Button variant="outline" className='border border-[#3b3a3a] bg-[#212121] hover:bg-[#312f2f] hover:text-white' onClick={handleCreateLibrary}><Plus className="h-3 w-3 " /></Button>}
                 </div>
 
                 {/* Library Entries Section */}
                 <div className="mt-1">
-                    {isLoading ? (
+                    {loadingDiaries ? (
                         <>
                             {!isCollapsed && Array(5).fill(0).map((_, index) => (
                                 <ShimmerEffect key={index} />
@@ -248,7 +184,7 @@ const Sidebar = () => {
                         </>
                     ) : (
                         <>
-                            {diaries && diaries.length > 0 ? diaries?.map((entry) => (
+                            {diaryEntries.length > 0 && diaryEntries ? diaryEntries.map((entry) => (
                                 <div
                                     key={entry.id}
                                     onClick={() => handleEntryClick(entry)}
@@ -268,19 +204,21 @@ const Sidebar = () => {
                                         </div>
                                     )}
                                 </div>
-                            )): <div className='flex p-5'>
+                            )) : <div className='flex p-5'>
                                 No libraries found
-                                </div>}
+                            </div>}
                         </>
                     )}
                 </div>
             </div>
 
             {/* User Section */}
-            <div className="p-4 border-t border-[#3b3a3a] flex items-center justify-between">
-                <div className="h-8 w-8 rounded-full bg-[#514e4e] flex items-center justify-center text-xs ">
-                    {getInitials(user?.name || "UserName Name")}
-                </div>
+            <div className="p-4 border-t border-[#3b3a3a] flex items-center justify-center gap-2">
+                <Avatar>
+                    <AvatarImage src='avatar.com' />
+                    <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+                </Avatar>
+
                 {!isCollapsed && (
                     <div className="ml-2">
                         <div className="text-sm font-medium ">{user?.name}</div>

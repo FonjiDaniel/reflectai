@@ -9,7 +9,7 @@ export const runtime = "edge";
 
 export async function POST(req: Request): Promise<Response> {
   // Check if the OPENAI_API_KEY is set, if not return 400
-  if (!process.env.OPENAI_API_SECRET || process.env.OPENAI_API_SECRET === "") {
+  if (!process.env.NEXT_PUBLIC_OPENAI_API_SECRET || process.env.NEXT_PUBLIC_OPENAI_API_SECRET === "") {
     return new Response("Missing OPENAI_API_KEY - make sure to add it to your .env file.", {
       status: 400,
     });
@@ -115,7 +115,7 @@ export async function POST(req: Request): Promise<Response> {
     ])
     .run();
 
-  const result = await streamText({
+  const result = streamText({
     prompt: messages[messages.length - 1].content,
     maxTokens: 4096,
     temperature: 0.7,

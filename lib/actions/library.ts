@@ -35,8 +35,8 @@ export const createLibrary = async (
 };
 
 export const getLibraries = async (
-  token: string,
-  userId: string
+  userId: string,
+  token: string
 ): Promise<Library[]> => {
   try {
     await new Promise((timer) => setTimeout(timer, 2000));

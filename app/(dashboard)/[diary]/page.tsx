@@ -22,7 +22,7 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
       try {
         setIsLoading(true);
         const initialInfo = await getLibraryContent(param.diary, token);
-        console.log(initialInfo)
+        console.log( " the initial content is " ,initialInfo)
         setContent(initialInfo);
         console.log("initial page content is :", initialInfo)
       } catch (error) {
@@ -44,7 +44,6 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
         <p>Loading...</p>
       ) : content ? (
         <>
-          <div className="flex justify-start text-2xl text-gray-400">{content!.title}</div>
           <TailwindAdvancedEditor initialValue={content} />
         </>
       ) : (

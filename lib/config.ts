@@ -4,6 +4,7 @@ interface Config {
     cloudinaryCloudName: string,
     cloudinaryApiKey: string,
     cloudinaryApiSecret : string, 
+    socketUrl: string
 
 }
 
@@ -12,6 +13,7 @@ export const config: Config = {
     backendBaseUrl: process.env.NEXT_PUBLIC_BACKEND_BASE_URL!,
     cloudinaryCloudName : process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
     cloudinaryApiKey : process.env.CLOUDINARY_API_KEY!,
-    cloudinaryApiSecret : process.env.CLOUDINARY_API_SECRET!
+    cloudinaryApiSecret : process.env.CLOUDINARY_API_SECRET!,
+    socketUrl: process.env.NEXT_PUBLIC_SOCKET_BASE_URL!
 
 };

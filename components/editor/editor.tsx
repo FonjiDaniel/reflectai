@@ -29,22 +29,27 @@ import { TextButtons } from "./selectors/text-buttons";
 import { slashCommand, suggestionItems } from "./slash-command";
 
 import hljs from "highlight.js";
-import { updateLibraryContent } from "@/lib/actions/library";
 import { useMyAuth } from "@/hooks/useAuth";
+import io from "socket.io-client"
+import { config } from "@/lib/config";
+import { Input } from "../ui/input";
+import { metadata } from "@/app/layout";
 
 const extensions = [...defaultExtensions, slashCommand];
 
 const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
-  const { token, user } = useMyAuth();
+  const { token } = useMyAuth();
 
   const [initialContent, setInitialContent] = useState<null | JSONContent>(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [charsCount, setCharsCount] = useState();
+  const [editorContent, setEditorContent] = useState<JSONContent>(initialValue.content)
 
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [openAI, setOpenAI] = useState(false);
+  const [title, setTitle] = useState<string>(initialValue.title);
 
   //Apply Codeblock Highlighting on the HTML from editor.getHTML()
   const highlightCodeblocks = (content: string) => {
@@ -60,23 +65,45 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
 
 
+  const socket = io(config.socketUrl, {
+    auth: {
+      token: token
+    }
+  });
 
+useEffect(()=>{
+
+  const updateOnTitleChange = () =>{
+  socket.emit("updateLibrary", {
+    id: initialValue.id,
+    title: title,
+    content: editorContent,
+    metadata: initialValue.metadata
+
+  })
+}
+
+  if(title){
+    const debounce = setTimeout(updateOnTitleChange, 500);
+    return () => clearTimeout(debounce);
+  }
+
+
+},[title])
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
-    const json = JSON.stringify(editor.getJSON());
-    console.log(initialValue.id);
-    console.log(json);
-    console.log("updated value is : ", editor.getJSON())
-    await updateLibraryContent(initialValue.id, token, initialValue.title, editor.getJSON());
 
+    socket.emit("updateLibrary", {
+      id: initialValue.id,
+      title: title,
+      content: editor.getJSON(),
+      metadata: initialValue.metadata
 
-
+    })
+    setEditorContent(editor.getJSON());
 
     setCharsCount(editor.storage.characterCount?.words() || 0);
 
-    window.localStorage.setItem("html-content", highlightCodeblocks(editor.getHTML()));
-    window.localStorage.setItem("novel-content", json);
-    console.log(JSON.parse(window.localStorage.getItem("novel-content")));
 
     // Ensure markdown storage exists before using it
     if (editor.storage.markdown) {
@@ -91,16 +118,10 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
     if (initialValue && initialValue.content) {
       console.log("Setting initial content from initialValue:", initialValue.content);
       setInitialContent(initialValue.content);
-    } else {
-      const storedContent = window.localStorage.getItem("novel-content");
-      if (storedContent) {
-        console.log("Setting initial content from localStorage");
-        setInitialContent(JSON.parse(storedContent));
-      } else {
+    }  else {
         console.log("Setting initial content to defaultEditorContent");
         setInitialContent(defaultEditorContent);
       }
-    }
   }, [initialValue]);
 
 
@@ -108,6 +129,18 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   return (
     <div className="relative w-full max-w-screen-lg">
+
+      <div className="border-none mb-5">
+        <Input
+          id="title"
+          onChange={(e) => setTitle(e.target.value)}
+          defaultValue={title}
+          className="border-none bg-transparent p-3 text-[#b7bdc1] dark:text-[#E4E4E7] text-2xl font-bold outline-none focus:border-transparent focus:text-3xl transition-all duration-300 ease-in-out 
+             focus:scale-105 "
+        />
+
+
+      </div>
       <div className="flex absolute right-5 top-5 z-10 mb-5 gap-2">
         <div className="rounded-lg bg-gray-700 px-2 py-1 text-sm text-muted-foreground text-[#c2baba]">{saveStatus}</div>
         <div className={charsCount ? "rounded-lg bg-accent px-2 py-1 text-sm bg-gray-700 text-[#bbb9b9] text-muted-foreground" : "hidden"}>
@@ -118,7 +151,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
         <EditorContent
           initialContent={initialContent}
           extensions={extensions}
-          className=" p-5 relative min-h-[500px] w-full max-w-screen-lg text-white border-[#292626] border bg-[#191919] sm:mb-[calc(20vh)] sm:rounded-lg "
+          className=" p-5 relative min-h-[500px] w-full max-w-screen-lg text-[#b7bdc1]  bg-[#191919] sm:mb-[calc(20vh)] sm:rounded-lg "
           editorProps={{
             handleDOMEvents: {
               keydown: (_view, event) => handleCommandNavigation(event),

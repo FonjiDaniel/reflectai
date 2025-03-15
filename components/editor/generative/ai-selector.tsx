@@ -27,18 +27,24 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   const [inputValue, setInputValue] = useState("");
 
   const { completion, complete, isLoading } = useCompletion({
-    // id: "novel",
     api: "/api/generate",
-    onResponse: (response) => {
+    onResponse: async (response) => {
+      console.log("API Response:", response);
+  
       if (response.status === 429) {
         toast.error("You have reached your request limit for the day.");
         return;
       }
+  
+      // Avoid reading response.text() since it's likely already handled internally
     },
     onError: (e) => {
+      console.error("Error in completion:", e);
       toast.error(e.message);
     },
   });
+  
+  
 
   const hasCompletion = completion.length > 0;
 

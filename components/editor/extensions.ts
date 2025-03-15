@@ -7,7 +7,6 @@ import {
     GlobalDragHandle,
     HighlightExtension,
     HorizontalRule,
-    // MarkdownExtension,
     Mathematics,
     Placeholder,
     StarterKit,
@@ -23,8 +22,10 @@ import {
     Youtube,
   } from "novel";
   
+  import { Markdown } from "tiptap-markdown";
   import { cx } from "class-variance-authority";
   import { common, createLowlight } from "lowlight";
+  
   
   //TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
   const aiHighlight = AIHighlight;
@@ -147,17 +148,19 @@ import {
   });
   
   const characterCount = CharacterCount.configure();
+
+
   
-//   const markdownExtension = MarkdownExtension.configure({
-//     html: true,
-//     tightLists: true,
-//     tightListClass: "tight",
-//     bulletListMarker: "-",
-//     linkify: false,
-//     breaks: false,
-//     transformPastedText: false,
-//     transformCopiedText: false,
-//   });
+  const markdownExtension = Markdown.configure({
+    html: true,
+    tightLists: true,
+    tightListClass: "tight",
+    bulletListMarker: "-",
+    linkify: false,
+    breaks: false,
+    transformPastedText: false,
+    transformCopiedText: false,
+  });
   
   export const defaultExtensions = [
     starterKit,
@@ -175,7 +178,7 @@ import {
     mathematics,
     characterCount,
     TiptapUnderline,
-    // markdownExtension,
+    markdownExtension,
     HighlightExtension,
     TextStyle,
     Color,
