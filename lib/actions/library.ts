@@ -1,6 +1,7 @@
 import { createLibraryProps, Library } from "@/types/index";
 import { config } from "../config";
 import { JSONContent } from "novel";
+import { toast } from "sonner";
 
 export const createLibrary = async (
   libraryData: createLibraryProps,
@@ -35,13 +36,12 @@ export const createLibrary = async (
 };
 
 export const getLibraries = async (
-  userId: string,
   token: string
 ): Promise<Library[]> => {
   try {
     await new Promise((timer) => setTimeout(timer, 2000));
     const response = await fetch(
-      `${config.backendBaseUrl}/libraries?userId=${userId}`,
+      `${config.backendBaseUrl}/libraries`,
       {
         method: "GET",
         headers: {
@@ -68,7 +68,7 @@ export const getLibraries = async (
   }
 };
 
-export const getLibraryContent = async (id: string, token: string) => {
+export const getDiaryContent = async (id: string, token: string) => {
   try {
     const response = await fetch(
       `${config.backendBaseUrl}/library/content/${id}`,
@@ -135,5 +135,26 @@ export const updateLibraryContent = async (
   } catch (error) {
     console.error("Error updating library content:", error);
     throw error;
+  }
+};
+
+export const deleteDiary = async (token: string, id: string) => {
+  try {
+    const response = await fetch(
+      `${config.backendBaseUrl}/library/delete/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  const diary = await response.json() as Library;
+  console.log("deleted diaryId is ", diary.id);
+    if (diary.id) return diary;
+  } catch (err) {
+    console.log(err);
+    throw Error("failed to delete diary");
   }
 };

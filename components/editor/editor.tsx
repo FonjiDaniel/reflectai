@@ -13,8 +13,9 @@ import {
   handleCommandNavigation,
   handleImageDrop,
   handleImagePaste,
+  useEditor,
 } from "novel";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { defaultExtensions } from "./extensions";
 import { ColorSelector } from "./selectors/color-selector";
@@ -22,6 +23,7 @@ import { LinkSelector } from "./selectors/link-selector";
 import { MathSelector } from "./selectors/math-selector";
 import { NodeSelector } from "./selectors/node-selector";
 import { Separator } from "./ui/separator";
+
 
 import GenerativeMenuSwitch from "./generative/generative-menu-switch";
 import { uploadFn } from "./image-upload";
@@ -33,7 +35,7 @@ import { useMyAuth } from "@/hooks/useAuth";
 import io from "socket.io-client"
 import { config } from "@/lib/config";
 import { Input } from "../ui/input";
-import { metadata } from "@/app/layout";
+
 
 const extensions = [...defaultExtensions, slashCommand];
 
@@ -50,6 +52,18 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   const [openLink, setOpenLink] = useState(false);
   const [openAI, setOpenAI] = useState(false);
   const [title, setTitle] = useState<string>(initialValue.title);
+
+  const titleRef = useRef<HTMLInputElement | null>(null); // Ref for the title input
+  const editor = useEditor();
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" || event.key === "ArrowDown") {
+      event.preventDefault(); 
+      editor.editor?.commands.focus()
+    }
+  };
+
 
   //Apply Codeblock Highlighting on the HTML from editor.getHTML()
   const highlightCodeblocks = (content: string) => {
@@ -71,25 +85,25 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
     }
   });
 
-useEffect(()=>{
+  useEffect(() => {
 
-  const updateOnTitleChange = () =>{
-  socket.emit("updateLibrary", {
-    id: initialValue.id,
-    title: title,
-    content: editorContent,
-    metadata: initialValue.metadata
+    const updateOnTitleChange = () => {
+      socket.emit("updateLibrary", {
+        id: initialValue.id,
+        title: title,
+        content: editorContent,
+        metadata: initialValue.metadata
 
-  })
-}
+      })
+    }
 
-  if(title){
-    const debounce = setTimeout(updateOnTitleChange, 500);
-    return () => clearTimeout(debounce);
-  }
+    if (title) {
+      const debounce = setTimeout(updateOnTitleChange, 500);
+      return () => clearTimeout(debounce);
+    }
 
 
-},[title])
+  }, [title])
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
 
@@ -100,7 +114,7 @@ useEffect(()=>{
       metadata: initialValue.metadata
 
     })
-    setEditorContent(editor.getJSON());
+    setEditorContent(editor.getJSON());  
 
     setCharsCount(editor.storage.characterCount?.words() || 0);
 
@@ -118,10 +132,10 @@ useEffect(()=>{
     if (initialValue && initialValue.content) {
       console.log("Setting initial content from initialValue:", initialValue.content);
       setInitialContent(initialValue.content);
-    }  else {
-        console.log("Setting initial content to defaultEditorContent");
-        setInitialContent(defaultEditorContent);
-      }
+    } else {
+      console.log("Setting initial content to defaultEditorContent");
+      setInitialContent(defaultEditorContent);
+    }
   }, [initialValue]);
 
 
@@ -135,7 +149,9 @@ useEffect(()=>{
           id="title"
           onChange={(e) => setTitle(e.target.value)}
           defaultValue={title}
-          className="border-none bg-transparent p-3 text-[#b7bdc1] dark:text-[#E4E4E7] text-2xl font-bold outline-none focus:border-transparent focus:text-3xl transition-all duration-300 ease-in-out 
+          onKeyDown={handleKeyDown}
+          ref={titleRef}
+          className="border-none bg-transparent p-3 text-[#b7bdc1] dark:text-[#E4E4E7] text-3xl font-bold outline-none focus:border-transparent focus:text-3xl transition-all duration-300 ease-in-out 
              focus:scale-105 "
         />
 

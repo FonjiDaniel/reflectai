@@ -9,9 +9,10 @@ interface SidebarState {
   activeEntryId: string | null;
   toggleSidebar: () => void;
   setActiveEntry: (id: string) => void;
-  fetchDiaryEntries: (id: string, token: string) => Promise<void>;
+  fetchDiaryEntries: (token: string) => Promise<void>;
   loadingDiaries: boolean;
-  setdiaries: (Diary: Library) => void;
+  setDiaries: (Diary: Library) => void;
+  updateDiariesOnDelete: (Diary: Library) => void;
 }
 
 export const useSidebarStore = create<SidebarState>()(
@@ -27,13 +28,12 @@ export const useSidebarStore = create<SidebarState>()(
       setActiveEntry: (id: string) => set({ activeEntryId: id }),
       loadingDiaries: false,
 
-      fetchDiaryEntries: async (id, token) => {
+      fetchDiaryEntries: async (token) => {
         try {
-          if (id && token) {
-            console.log("Starting to fetch diary entries");
+          if (token) {
             set({ loadingDiaries: true });
             try {
-              const diary = await getLibraries(id, token);
+              const diary = await getLibraries(token);
               set({ diaryEntries: diary });
             } catch (err) {
               console.error("Error in fetchDiaryEntries:", err);
@@ -56,8 +56,14 @@ export const useSidebarStore = create<SidebarState>()(
           console.error("Error fetching library entries:", error);
         }
       },
-      setdiaries: (diary: Library) =>
+      setDiaries: (diary: Library) =>
         set((state) => ({ diaryEntries: [diary, ...state.diaryEntries] })),
+      updateDiariesOnDelete: (diaryToDelete: Library) =>
+        set((state) => ({
+          diaryEntries: state.diaryEntries.filter(
+            (diary) => diary.id !== diaryToDelete.id
+          ),
+        })),
     }),
     {
       name: "sidebar-storage",

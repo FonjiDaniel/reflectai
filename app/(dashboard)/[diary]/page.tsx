@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import TailwindAdvancedEditor from "@/components/editor/editor";
 import { useParams } from "next/navigation";
 import { useMyAuth } from "@/hooks/useAuth";
-import { getLibraryContent } from "@/lib/actions/library";
+import { getDiaryContent } from "@/lib/actions/library";
+import Head from "next/head";
+
 
 
 export default function Page({ params }: { params: Promise<{ diary: string }> }) {
@@ -15,13 +17,11 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
   console.log(" param is param", param.diary);
 
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const initialInfo = await getLibraryContent(param.diary, token);
+        const initialInfo = await getDiaryContent(param.diary, token);
         console.log( " the initial content is " ,initialInfo)
         setContent(initialInfo);
         console.log("initial page content is :", initialInfo)
@@ -38,7 +38,14 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
   }, [param.diary, token]);
 
 
+
   return (
+  <>
+  <Head>
+    <title>
+      {isLoading? "next" : "title"}
+    </title>
+  </Head>
     <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-10">
       {isLoading ? (
         <p>Loading...</p>
@@ -47,8 +54,9 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
           <TailwindAdvancedEditor initialValue={content} />
         </>
       ) : (
-        <p>an error occcured . Refresh The page </p>
+        <p>an error occcured. Refresh The page </p>
       )}
     </div>
+    </>
   );
 }
