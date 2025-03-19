@@ -104,18 +104,6 @@ const Sidebar = () => {
             const deletedDiary = await deleteDiary(token, id)
             if (deletedDiary?.id) toast.success("diary deleted successfull");
             updateDiariesOnDelete(deletedDiary!);
-            console.log("the diary entries after deletion is " ,diaryEntries)
-
-            if (deletedDiary?.id == activeEntryId) {
-                if (diaryEntries.length > 0) {
-
-                    setActiveEntry(diaryEntries[0].id);
-                    router.push(`/${diaryEntries[0].id}`);
-                }
-            }
-
-
-
         } catch (err) {
             console.log(err);
 

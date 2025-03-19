@@ -1,7 +1,6 @@
 import { createLibraryProps, Library } from "@/types/index";
 import { config } from "../config";
 import { JSONContent } from "novel";
-import { toast } from "sonner";
 
 export const createLibrary = async (
   libraryData: createLibraryProps,
@@ -17,9 +16,7 @@ export const createLibrary = async (
       body: JSON.stringify(libraryData),
     });
 
-    console.log("Response Status:", response.status);
     const responseText = await response.text();
-    console.log("Response Text:", responseText);
 
     if (!response.ok) {
       throw new Error(
@@ -90,10 +87,9 @@ export const getDiaryContent = async (id: string, token: string) => {
       return;
     }
     const result = await response.json();
-    console.log(result);
     return result;
   } catch (er) {
-    console.log(er);
+    console.error(er);
     throw er;
   }
 };
@@ -151,10 +147,9 @@ export const deleteDiary = async (token: string, id: string) => {
       }
     );
   const diary = await response.json() as Library;
-  console.log("deleted diaryId is ", diary.id);
     if (diary.id) return diary;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw Error("failed to delete diary");
   }
 };

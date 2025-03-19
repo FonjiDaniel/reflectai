@@ -53,7 +53,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   const [openAI, setOpenAI] = useState(false);
   const [title, setTitle] = useState<string>(initialValue.title);
 
-  const titleRef = useRef<HTMLInputElement | null>(null); // Ref for the title input
+  const titleRef = useRef<HTMLInputElement | null>(null);
   const editor = useEditor();
 
 
