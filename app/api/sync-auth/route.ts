@@ -45,7 +45,12 @@ export async function GET(): Promise<NextResponse<AuthResponse>> {
     
     const data = await response.json() as AuthResponse;
     
+
+    
     return NextResponse.json(data);
+
+
+
   } catch (error) {
     console.error("Auth sync error:", error);
     return NextResponse.json(

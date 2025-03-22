@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from "react";
 import TailwindAdvancedEditor from "@/components/editor/editor";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useMyAuth } from "@/hooks/useAuth";
 import { getDiaryContent } from "@/lib/actions/library";
 import Head from "next/head";
@@ -22,6 +22,7 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
       try {
         setIsLoading(true);
         const initialInfo = await getDiaryContent(param.diary, token);
+        if(!initialInfo) notFound()
         console.log( " the initial content is " ,initialInfo)
         setContent(initialInfo);
         console.log("initial page content is :", initialInfo)

@@ -30,7 +30,7 @@ import { uploadFn } from "./image-upload";
 import { TextButtons } from "./selectors/text-buttons";
 import { slashCommand, suggestionItems } from "./slash-command";
 
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 import { useMyAuth } from "@/hooks/useAuth";
 import io from "socket.io-client"
 import { config } from "@/lib/config";
@@ -66,15 +66,15 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
 
   //Apply Codeblock Highlighting on the HTML from editor.getHTML()
-  const highlightCodeblocks = (content: string) => {
-    const doc = new DOMParser().parseFromString(content, "text/html");
-    doc.querySelectorAll("pre code").forEach((el) => {
-      //@ts-ignore
-      // https://highlightjs.readthedocs.io/en/latest/api.html?highlight=highlightElement#highlightelement
-      hljs.highlightElement(el);
-    });
-    return new XMLSerializer().serializeToString(doc);
-  };
+  // const highlightCodeblocks = (content: string) => {
+  //   const doc = new DOMParser().parseFromString(content, "text/html");
+  //   doc.querySelectorAll("pre code").forEach((el) => {
+  //     //@ts-ignore
+  //     // https://highlightjs.readthedocs.io/en/latest/api.html?highlight=highlightElement#highlightelement
+  //     hljs.highlightElement(el);
+  //   });
+  //   return new XMLSerializer().serializeToString(doc);
+  // };
 
 
 
@@ -111,7 +111,8 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
       id: initialValue.id,
       title: title,
       content: editor.getJSON(),
-      metadata: initialValue.metadata
+      metadata: initialValue.metadata,
+      wordCount: editor.storage.characterCount?.words() || 0
 
     })
     setEditorContent(editor.getJSON());  

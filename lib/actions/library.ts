@@ -32,21 +32,16 @@ export const createLibrary = async (
   }
 };
 
-export const getLibraries = async (
-  token: string
-): Promise<Library[]> => {
+export const getLibraries = async (token: string): Promise<Library[]> => {
   try {
     await new Promise((timer) => setTimeout(timer, 2000));
-    const response = await fetch(
-      `${config.backendBaseUrl}/libraries`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${config.backendBaseUrl}/libraries`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       console.error(
@@ -109,7 +104,7 @@ export const updateLibraryContent = async (
     if (metadata) body.metadata = metadata;
 
     if (Object.keys(body).length === 0) {
-      throw new Error(
+      console.error(
         "At least one field (title, metadata, or content) must be provided."
       );
     }
@@ -146,7 +141,7 @@ export const deleteDiary = async (token: string, id: string) => {
         },
       }
     );
-  const diary = await response.json() as Library;
+    const diary = (await response.json()) as Library;
     if (diary.id) return diary;
   } catch (err) {
     console.error(err);

@@ -13,6 +13,7 @@ import {
     MoreHorizontalIcon,
     PencilLine,
     Trash2,
+    LucideProps,
 } from "lucide-react";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { Library, User } from "@/types/index";
@@ -64,7 +65,7 @@ const Sidebar = () => {
 
         try {
             const newDiary = await createLibrary(diaryData, token);
-            if (!newDiary) throw new Error("Error creating diary");
+            if (!newDiary) console.error("Error creating diary");
 
             setDiaries(newDiary);
             setActiveEntry(newDiary.id);
@@ -166,7 +167,7 @@ const Sidebar = () => {
                                 entry={entry}
                                 isCollapsed={isCollapsed}
                                 activeEntryId={activeEntryId}
-                                onClick={handleEntryClick}
+                                onClick={ ()=>handleEntryClick(entry)}
                                 onDelete={() => handleDeleteDiary(token, entry.id)} />
                         ))
                     ) : (
@@ -181,7 +182,17 @@ const Sidebar = () => {
     );
 };
 
-const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: { href: string, label: string, isCollapsed: boolean }) => (
+const SidebarLink = (
+    { 
+        href, 
+        icon: Icon, 
+        label, 
+        isCollapsed }: 
+    {   href: string, 
+        icon: React.FC<LucideProps>,
+        label: string, 
+        isCollapsed: boolean }) => (
+
     <Link href={href} className="flex items-center px-4 py-2 hover:bg-[#312f2f] transition-colors">
         <Icon className="h-4 w-4 mr-2" />
         {!isCollapsed && <span>{label}</span>}

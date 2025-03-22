@@ -36,9 +36,15 @@ export function useMyAuth(): UseAuthReturn {
         const data = await response.json() as AuthResponse;
         
         if (data.success && data.data?.token && data.data?.user) {
-          setAuth(data.data.user, data.data.token);       
-          console.log(data.data.token);
-          console.log(data.message);
+
+
+          //set user information for client side usage
+          setAuth(data.data.user, data.data.token); 
+
+
+          //store user information to cookie for server side usage  with a life span of 7days
+          document.cookie = `token=${data.data.token}; path=/; max-age=${7 * 24 * 60 * 60}; secure`;
+          document.cookie = `user=${JSON.stringify(data.data.user)}; path=/; max-age=${7 * 24 * 60 * 60}; secure`;
         } else {
           console.error('Auth sync failed:', data.message);
           logout();

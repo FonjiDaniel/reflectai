@@ -219,3 +219,9 @@ h3 {
 .scrollbar-custom::-webkit-scrollbar-track {
   background: #222; /* Slightly lighter background */
 }
+.border-shadow-right{
+  background: linear-gradient(to left, rgba(22, 22, 22, 0.9), rgba(22, 22, 22, 0)),
+}
+.border-shadow-left{
+  background: linear-gradient(to right, rgba(22, 22, 22, 0.9), rgba(22, 22, 22, 0));
+}
