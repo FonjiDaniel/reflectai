@@ -14,18 +14,14 @@ export default function Page({ params }: { params: Promise<{ diary: string }> })
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const param = useParams<{ diary: string }>()
-  console.log(" param is param", param.diary);
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
         const initialInfo = await getDiaryContent(param.diary, token);
         if(!initialInfo) notFound()
-        console.log( " the initial content is " ,initialInfo)
         setContent(initialInfo);
-        console.log("initial page content is :", initialInfo)
+    
       } catch (error) {
         console.error("Failed to fetch content:", error);
       } finally {

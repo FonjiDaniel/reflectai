@@ -18,6 +18,8 @@ const ChartComponent = () => {
       const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
       const data = {
         labels: labels,
+        yAxisID: "WordCount",
+        xAxisID: "Date",
         datasets: [{
           label: 'My First Dataset',
           data: [65, 59, 80, 81, 56, 55, 40],

@@ -1,12 +1,13 @@
 "use client"
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useMyAuth } from '@/hooks/useAuth'
-import { Book, ChevronLeft, ChevronRight, LucideProps } from 'lucide-react'
+import { Book, ChevronLeft, ChevronRight, LucideProps, Timer } from 'lucide-react'
 import { timeAgo } from '@/lib/utils'
 import { useSidebarStore } from '@/store/useSidebarStore'
 import { Library } from '@/types'
 import { getLibraries } from '@/lib/actions/library'
 import { useRouter } from 'next/navigation'
+import { isValid } from 'date-fns'
 
 const RecentDiaries = () => {
 
@@ -76,7 +77,18 @@ const RecentDiaries = () => {
     return (
 
 
-        <div className='relative '>
+       <div>
+
+            {loading ? <div className="px-4 py-2 flex items-center mb-4">
+                <div className="h-2 w-4 rounded bg-[#312f2f] animate-pulse mr-2"></div>
+                <div className="h-2 w-20 rounded bg-[#312f2f] animate-pulse"></div>
+            </div> : <div className='flex gap-1 justify-start mb-4 text-gray-500'>
+                <Timer />
+                <p>dive Right back in</p>
+            </div>} 
+            
+            <div className='relative '>
+
 
             {showLeftShadow &&
                 <button
@@ -102,7 +114,7 @@ const RecentDiaries = () => {
                 ref={scrollRef}
                 className='flex gap-8 overflow-x-auto  scrollbar-hidden scroll-smooth max-w-[700px] p-2 '>
                 {loading
-                    ? Array.from({ length: 3 }, (_, index) => <DiaryEntryShimmer key={index} />)
+                    ? Array.from({ length: 4 }, (_, index) => <DiaryEntryShimmer key={index} />)
                     : diaries && diaries.length > 0
                         ? diaries.map((diary) => (<DiaryEntry key={diary.id} icon={Book} diary={diary} onClick={() => handleEntryClick(diary)} />))
                         : <p>no libraries found</p>
@@ -126,6 +138,7 @@ const RecentDiaries = () => {
                 </button>
             )}
 
+        </div>
         </div>
 
 

@@ -23,6 +23,7 @@ import { useMyAuth } from "@/hooks/useAuth";
 import { createLibrary, deleteDiary } from "@/lib/actions/library";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import Tooltip from '@mui/material/Tooltip';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -70,8 +71,8 @@ const Sidebar = () => {
             setDiaries(newDiary);
             setActiveEntry(newDiary.id);
             router.push(`/${newDiary.id}`);
-        } catch (error) {
-            console.error("Failed to create library", error);
+        } catch (err) {
+            console.error("Failed to create library", err);
         }
     };
 
@@ -117,7 +118,7 @@ const Sidebar = () => {
             router.push(`/${diaryEntries[0].id}`);
         }
     }, [diaryEntries]);
-    
+
 
     return (
         <div
@@ -150,16 +151,18 @@ const Sidebar = () => {
                 <div className="sticky top-0 bg-[#212121] px-4 py-2 flex items-center justify-between z-10">
                     {!isCollapsed && <span className="text-xs font-medium text-gray-500">Recent diaries</span>}
                     {!isCollapsed && (
+                        <Tooltip title="Create a new Page" placement="right-start">
                         <Button variant="outline" className="border border-[#475569] bg-[#212121] hover:bg-[#312f2f]" onClick={handleCreateLibrary}>
                             <Plus className="h-3 w-3" />
                         </Button>
+                        </Tooltip>
                     )}
                 </div>
 
                 <div className="mt-1">
                     {loadingDiaries ? (
                         !isCollapsed &&
-                        Array.from({ length: 5 }, (_, index) => <ShimmerEffect key={index} />)
+                        Array.from({ length: 5 }, (_, index) => <ShimmerEffect key={index} />)  // Shimmer Loading
                     ) : diaryEntries.length > 0 ? (
                         diaryEntries.map((entry) => (
                             <SidebarEntry
@@ -167,7 +170,7 @@ const Sidebar = () => {
                                 entry={entry}
                                 isCollapsed={isCollapsed}
                                 activeEntryId={activeEntryId}
-                                onClick={ ()=>handleEntryClick(entry)}
+                                onClick={() => handleEntryClick(entry)}
                                 onDelete={() => handleDeleteDiary(token, entry.id)} />
                         ))
                     ) : (
@@ -183,15 +186,17 @@ const Sidebar = () => {
 };
 
 const SidebarLink = (
-    { 
-        href, 
-        icon: Icon, 
-        label, 
-        isCollapsed }: 
-    {   href: string, 
-        icon: React.FC<LucideProps>,
-        label: string, 
-        isCollapsed: boolean }) => (
+    {
+        href,
+        icon: Icon,
+        label,
+        isCollapsed }:
+        {
+            href: string,
+            icon: React.FC<LucideProps>,
+            label: string,
+            isCollapsed: boolean
+        }) => (
 
     <Link href={href} className="flex items-center px-4 py-2 hover:bg-[#312f2f] transition-colors">
         <Icon className="h-4 w-4 mr-2" />
@@ -254,7 +259,7 @@ const UserSection = ({ user, isCollapsed, handleLogout }: { user: User, isCollap
     <div className="p-4 border-t border-[#3b3a3a] flex items-center justify-center gap-2">
         <Avatar>
             <AvatarImage src='avatar.com' />
-            <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+            <AvatarFallback className="bg-purple-400">{getInitials(user?.name)}</AvatarFallback>
         </Avatar>
 
         {!isCollapsed && (
