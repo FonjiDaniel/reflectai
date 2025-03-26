@@ -7,7 +7,6 @@ import { useSidebarStore } from '@/store/useSidebarStore'
 import { Library } from '@/types'
 import { getLibraries } from '@/lib/actions/library'
 import { useRouter } from 'next/navigation'
-import { isValid } from 'date-fns'
 
 const RecentDiaries = () => {
 
@@ -114,10 +113,10 @@ const RecentDiaries = () => {
                 ref={scrollRef}
                 className='flex gap-8 overflow-x-auto  scrollbar-hidden scroll-smooth max-w-[700px] p-2 '>
                 {loading
-                    ? Array.from({ length: 4 }, (_, index) => <DiaryEntryShimmer key={index} />)
+                    ? Array.from({ length: 3 }, (_, index) => <DiaryEntryShimmer key={index} />)
                     : diaries && diaries.length > 0
                         ? diaries.map((diary) => (<DiaryEntry key={diary.id} icon={Book} diary={diary} onClick={() => handleEntryClick(diary)} />))
-                        : <p>no libraries found</p>
+                        : <p>no Diaries found</p>
                 }
 
 
@@ -149,53 +148,22 @@ const RecentDiaries = () => {
 
 export default RecentDiaries;
 
-const DiaryEntry = ({ icon: Icon, diary, onClick }: { icon: React.FC<LucideProps>, diary: Library, onClick: (entry: Library) => void }) => (
+const DiaryEntry = ({ icon: Icon, diary, onClick } : { icon: React.FC<LucideProps>, diary: Library, onClick: (entry: Library) => void }) => (
 
     <div
         onClick={() => onClick(diary)}
         className='relative flex flex-col justify-between items-start w-[150px]  h-[150px] p-4 text-[#b7bdc1] rounded-xl bg-[#312f2f] hover:cursor-pointer'>
-        <div className="absolute inset-0 rounded-xl z-0 w-full border-glow"></div>
-
-        <div className="relative z-10 flex flex-col justify-between items-start w-[150px] h-full">
-            <Icon className="h-4 w-4 mr-2 text-[#676969]" />
-            <p className='truncate whitespace-nowrap w-full'>{diary?.title}</p>
+        <div className="relative z-10 flex flex-col justify-between flex-shrink-0 items-start w-full overflow-hidden h-full">
+            <Icon className="h-4 w-4 text-[#676969]" />
+            <p className='truncate w-[150px] '>{diary?.title}</p>
             <p className='text-xs text-gray-500'>{timeAgo(diary?.updated_at)}</p>
         </div>
 
-        <style jsx>{`
-      @keyframes borderGlow {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-  
-      .border-glow::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        padding: 2px; /* Border width */
-        border-radius: inherit;
-        background: linear-gradient(90deg, #6b46c1, #d53f8c, #6b46c1);
-        background-size: 200% 200%;
-        animation: borderGlow 1.5s infinite linear;
-        -webkit-mask: 
-          linear-gradient(#fff 0 0) content-box, 
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-      }
-    `}</style>
     </div>
 
 )
 
 const DiaryEntryShimmer = () => (
-    <div className="h-[150px] w-[150px] rounded bg-[#312f2f] animate-pulse mr-2"></div>
+    <div className="h-[150px] w-full rounded bg-[#312f2f] animate-pulse mr-2"></div>
 
 )

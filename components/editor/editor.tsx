@@ -1,5 +1,4 @@
 "use client";
-import { defaultEditorContent } from "@/lib/content";
 import {
   EditorCommand,
   EditorCommandEmpty,
@@ -85,25 +84,25 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
     }
   });
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const updateOnTitleChange = () => {
-      socket.emit("updateLibrary", {
-        id: initialValue.id,
-        title: title,
-        content: editorContent,
-        metadata: initialValue.metadata
+  //   const updateOnTitleChange = () => {
+  //     socket.emit("updateLibrary", {
+  //       id: initialValue.id,
+  //       title: title,
+  //       content: editorContent,
+  //       metadata: initialValue.metadata
 
-      })
-    }
+  //     })
+  //   }
 
-    if (title) {
-      const debounce = setTimeout(updateOnTitleChange, 500);
-      return () => clearTimeout(debounce);
-    }
+  //   if (title) {
+  //     const debounce = setTimeout(updateOnTitleChange, 500);
+  //     return () => clearTimeout(debounce);
+  //   }
 
 
-  }, [title])
+  // }, [title])
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
 
@@ -131,11 +130,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   useEffect(() => {
     if (initialValue && initialValue.content) {
-      console.log("Setting initial content from initialValue:", initialValue.content);
       setInitialContent(initialValue.content);
-    } else {
-      console.log("Setting initial content to defaultEditorContent");
-      setInitialContent(defaultEditorContent);
     }
   }, [initialValue]);
 
@@ -227,4 +222,4 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   );
 };
 
-export default TailwindAdvancedEditor;
+export default TailwindAdvancedEditor;   

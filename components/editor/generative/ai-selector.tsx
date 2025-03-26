@@ -2,7 +2,7 @@
 
 import { Command, CommandInput } from "@/components/editor/ui/command";
 
-import { useCompletion } from "ai/react";
+import { useCompletion } from "@ai-sdk/react";
 import { ArrowUp } from "lucide-react";
 import { useEditor } from "novel";
 import { addAIHighlight } from "novel";
@@ -29,7 +29,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   const { completion, complete, isLoading } = useCompletion({
     api: "/api/generate",
     onResponse: async (response) => {
-      console.log("API Response:", response);
+      console.log("API Response:", response.json());
   
       if (response.status === 429) {
         toast.error("You have reached your request limit for the day.");

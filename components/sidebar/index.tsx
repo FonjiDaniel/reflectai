@@ -57,7 +57,7 @@ const Sidebar = () => {
     const diaryData = {
         title: "New page",
         description: "null",
-        createdBy: user?.id || "",
+        createdBy: user?.id,
     };
 
     const handleCreateLibrary = async (e: React.FormEvent) => {
@@ -152,9 +152,9 @@ const Sidebar = () => {
                     {!isCollapsed && <span className="text-xs font-medium text-gray-500">Recent diaries</span>}
                     {!isCollapsed && (
                         <Tooltip title="Create a new Page" placement="right-start">
-                        <Button variant="outline" className="border border-[#475569] bg-[#212121] hover:bg-[#312f2f]" onClick={handleCreateLibrary}>
-                            <Plus className="h-3 w-3" />
-                        </Button>
+                            <Button variant="outline" className="border border-[#475569] bg-[#212121] hover:bg-[#312f2f]" onClick={handleCreateLibrary}>
+                                <Plus className="h-3 w-3" />
+                            </Button>
                         </Tooltip>
                     )}
                 </div>
@@ -259,7 +259,7 @@ const UserSection = ({ user, isCollapsed, handleLogout }: { user: User, isCollap
     <div className="p-4 border-t border-[#3b3a3a] flex items-center justify-center gap-2">
         <Avatar>
             <AvatarImage src='avatar.com' />
-            <AvatarFallback className="bg-purple-400">{getInitials(user?.name)}</AvatarFallback>
+            <AvatarFallback className="bg-purple-400 text-white">{getInitials(user?.name)}</AvatarFallback>
         </Avatar>
 
         {!isCollapsed && (

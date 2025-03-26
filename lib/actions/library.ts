@@ -1,4 +1,4 @@
-import { createLibraryProps, Library } from "@/types/index";
+import { createLibraryProps, Library, WritingStats } from "@/types/index";
 import { config } from "../config";
 import { JSONContent } from "novel";
 
@@ -148,3 +148,30 @@ export const deleteDiary = async (token: string, id: string) => {
     throw Error("failed to delete diary");
   }
 };
+
+
+export const getUserWritingStats =  async   ( token: string) : Promise<WritingStats[]> => {
+  try {
+    const response = await fetch(`${config.backendBaseUrl}/stats`, 
+    {
+      method: "GET",
+      headers: {
+          "Content-Type" : "application/json",
+          "Authorization" : `Bearer ${token}`
+
+      }
+
+    })
+  const stats: WritingStats[] = await response.json();
+  console.log( "raw data is " , stats);
+  return stats;
+
+    
+  } catch (err) {
+    console.error(err)
+    return [];
+    
+  }
+
+
+}

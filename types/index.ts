@@ -64,3 +64,10 @@ export interface LibraryEntry {
     height: number;
     public_id: string;
   }
+
+  export interface WritingStats {
+    user_id : string,
+    entry_date: string,
+    word_count: number,
+    entry_count: number
+  }
