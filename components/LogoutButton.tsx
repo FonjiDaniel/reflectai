@@ -15,7 +15,7 @@ function LogoutButton() {
             signOut();
 
         } catch (er) {
-            console.log(er);
+            console.error(er);
         }
 
     }

@@ -1,4 +1,4 @@
-import { createLibraryProps, Library, WritingStats } from "@/types/index";
+import { createLibraryProps, Library, UserStreak, WritingStats } from "@/types/index";
 import { config } from "../config";
 import { JSONContent } from "novel";
 
@@ -149,29 +149,45 @@ export const deleteDiary = async (token: string, id: string) => {
   }
 };
 
-
-export const getUserWritingStats =  async   ( token: string) : Promise<WritingStats[]> => {
+export const getUserWritingStats = async (
+  token: string
+): Promise<WritingStats[]> => {
   try {
-    const response = await fetch(`${config.backendBaseUrl}/stats`, 
-    {
+    const response = await fetch(`${config.backendBaseUrl}/stats`, {
       method: "GET",
       headers: {
-          "Content-Type" : "application/json",
-          "Authorization" : `Bearer ${token}`
-
-      }
-
-    })
-  const stats: WritingStats[] = await response.json();
-  console.log( "raw data is " , stats);
-  return stats;
-
-    
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const stats: WritingStats[] = await response.json();
+    return stats;
   } catch (err) {
-    console.error(err)
+    console.error(err);
     return [];
-    
   }
+};
 
+export const getUserStreak = async (userId: string, token: string) : Promise<UserStreak[]> => {
+  try {
+    const response = await fetch(`${config.backendBaseUrl}/streak/${userId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-}
+    if (!response.ok) {
+      throw new Error(`Failed to fetch streak: ${response.status} ${response.statusText}`);
+    }
+
+    const streak : UserStreak[] = await response.json();
+    console.log("Streak data is:", streak);
+
+    return streak;
+  } catch (err) {
+    console.error("Error fetching streak:", err);
+    return []; 
+  }
+};
+

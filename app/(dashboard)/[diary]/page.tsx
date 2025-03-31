@@ -1,59 +1,40 @@
-"use client"
-import React, { useEffect } from "react";
+"use client";
+import React from "react";
 import TailwindAdvancedEditor from "@/components/editor/editor";
 import { notFound, useParams } from "next/navigation";
 import { useMyAuth } from "@/hooks/useAuth";
-import { getDiaryContent } from "@/lib/actions/library";
 import Head from "next/head";
+import useSWR from "swr";
+import { getDiaryContent } from "@/lib/actions/library";
 
+const fetcher = (id: string, token: string) =>
+  getDiaryContent(id, token);
 
-
-export default function Page({ params }: { params: Promise<{ diary: string }> }) {
-  const [content, setContent] = React.useState();
+export default function Page() {
   const { token } = useMyAuth();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const param = useParams<{ diary: string }>();
 
-  const param = useParams<{ diary: string }>()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const initialInfo = await getDiaryContent(param.diary, token);
-        if(!initialInfo) notFound()
-        setContent(initialInfo);
-    
-      } catch (error) {
-        console.error("Failed to fetch content:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const { data: content, error, isLoading } = useSWR(
+    param.diary && token ? [param.diary, token] : null,
+    ([id, token,]) => fetcher(id, token)
+  );
 
-    if (param.diary && token) {
-      fetchData();
-    }
-  }, [param.diary, token]);
-
-
+  if (error) return notFound();
 
   return (
-  <>
-  <Head>
-    <title>
-      {isLoading? "next" : "title"}
-    </title>
-  </Head>
-    <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-10">
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : content ? (
-        <>
-          <TailwindAdvancedEditor initialValue={content} />
-        </>
-      ) : (
-        <p>an error occcured. Refresh The page </p>
-      )}
-    </div>
+    <>
+      <Head>
+        <title>{isLoading ? "Loading..." : "Diary"}</title>
+      </Head>
+      <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-10">
+        {isLoading ? (
+          <p>Loading...</p>
+        ) :  content && content.content ? (
+          <TailwindAdvancedEditor initialValue={content} key={param.diary} />
+        ) : (
+          <p>An error occurred. Refresh the page.</p>
+        )}
+      </div>
     </>
   );
 }

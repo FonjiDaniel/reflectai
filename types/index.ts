@@ -1,3 +1,5 @@
+import { JSONContent } from "novel";
+
 export interface LibraryEntry {
     id: string;
     title: string;
@@ -52,7 +54,7 @@ export interface LibraryEntry {
     is_public: boolean;
     ai_generated: boolean;
     ai_prompt: string | null;
-    ai_settings: any | null; // Adjust type if ai_settings has a defined structure
+    ai_settings: JSONContent | null; // Adjust type if ai_settings has a defined structure
   }
   
 
@@ -71,3 +73,17 @@ export interface LibraryEntry {
     word_count: number,
     entry_count: number
   }
+
+  export interface UserStreak {
+    current_streak: number
+    longest_streak: number
+  }
+
+  
+  export interface WritingTrackerCalendarProps {
+    year: number;
+    month: number;
+    entries: WritingStats[];
+    onDateClick?: (date: Date) => void;
+  }
+  

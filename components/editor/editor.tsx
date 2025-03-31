@@ -22,6 +22,7 @@ import { LinkSelector } from "./selectors/link-selector";
 import { MathSelector } from "./selectors/math-selector";
 import { NodeSelector } from "./selectors/node-selector";
 import { Separator } from "./ui/separator";
+import { useSWRConfig } from "swr";
 
 
 import GenerativeMenuSwitch from "./generative/generative-menu-switch";
@@ -40,6 +41,7 @@ const extensions = [...defaultExtensions, slashCommand];
 
 const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   const { token } = useMyAuth();
+  const { mutate } = useSWRConfig();
 
   const [initialContent, setInitialContent] = useState<null | JSONContent>(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
@@ -50,7 +52,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [openAI, setOpenAI] = useState(false);
-  const [title, setTitle] = useState<string>(initialValue.title);
+  const [title, setTitle] = useState<string | null>( initialValue.title);
 
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editor = useEditor();
@@ -75,6 +77,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   //   return new XMLSerializer().serializeToString(doc);
   // };
 
+  
 
 
 
@@ -104,17 +107,22 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   // }, [title])
 
-  const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
+  const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance | null) => {
+    if(!editor) return;
+
+  const updatedContent = editor.getJSON();
+
 
     socket.emit("updateLibrary", {
       id: initialValue.id,
       title: title,
-      content: editor.getJSON(),
+      content: updatedContent,
       metadata: initialValue.metadata,
       wordCount: editor.storage.characterCount?.words() || 0
 
     })
-    setEditorContent(editor.getJSON());  
+    mutate([initialValue.id, token], {...initialValue, ...updatedContent, title: title, }, true)
+    setEditorContent(updatedContent);  
 
     setCharsCount(editor.storage.characterCount?.words() || 0);
 
@@ -131,8 +139,13 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   useEffect(() => {
     if (initialValue && initialValue.content) {
       setInitialContent(initialValue.content);
+      // setEditorContent(initialValue.content); // Ensure updated content is set
+      setTitle(initialValue.title);
     }
   }, [initialValue]);
+
+
+  
 
 
   if (!initialContent) return null;
@@ -144,7 +157,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
         <Input
           id="title"
           onChange={(e) => setTitle(e.target.value)}
-          defaultValue={title}
+          defaultValue={title!}
           onKeyDown={handleKeyDown}
           ref={titleRef}
           className="border-none bg-transparent p-3 text-[#b7bdc1] dark:text-[#E4E4E7] text-3xl font-bold outline-none focus:border-transparent focus:text-3xl transition-all duration-300 ease-in-out 

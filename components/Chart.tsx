@@ -11,6 +11,7 @@ const ChartComponent = () => {
   const chartInstance = useRef(null);
   const [stat, setStat] = useState<WritingStats[]>([]);
   const { user, token } = useMyAuth();
+  
 
   useEffect(() => {
     const getStats = async () => {
@@ -34,12 +35,11 @@ const ChartComponent = () => {
     if (chartRef.current && stat.length > 0) {
       const ctx = chartRef.current.getContext("2d");
 
-      // Destroy existing chart instance if it exists
+  // destroy the chartInstance if it already exists
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
 
-      // Extract labels (dates) and data (word_count)
       const labels = stat.map((item) => {
         const date = new Date(item.entry_date);
         return !isNaN(date.getTime()) ? date.toLocaleDateString() : "Invalid Date";
@@ -53,7 +53,7 @@ const ChartComponent = () => {
           labels: labels,
           datasets: [
             {
-              label: "Daily writing starts",
+              label: "Daily writing stats",
               data: dataValues,
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -74,6 +74,7 @@ const ChartComponent = () => {
                 'rgb(201, 203, 207)'
               ],
               borderWidth: 1,
+              barThickness: 30
             },
           ],
         },
@@ -105,7 +106,7 @@ const ChartComponent = () => {
     };
   }, [stat]);
 
-  return <canvas ref={chartRef} />;
+  return stat.length> 0 ? <canvas ref={chartRef} /> : <div className="text-[#676969]">No data to show</div>
 };
 
 export default ChartComponent;
