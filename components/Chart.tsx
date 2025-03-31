@@ -7,8 +7,8 @@ import { useMyAuth } from "@/hooks/useAuth";
 import { WritingStats } from "@/types";
 
 const ChartComponent = () => {
-  const chartRef = useRef(null);
-  const chartInstance = useRef(null);
+  const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstance = useRef <Chart | null >(null);
   const [stat, setStat] = useState<WritingStats[]>([]);
   const { user, token } = useMyAuth();
   
@@ -34,6 +34,7 @@ const ChartComponent = () => {
   useEffect(() => {
     if (chartRef.current && stat.length > 0) {
       const ctx = chartRef.current.getContext("2d");
+      if (!ctx) return; 
 
   // destroy the chartInstance if it already exists
       if (chartInstance.current) {
