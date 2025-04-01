@@ -218,7 +218,7 @@ const SidebarEntry = (
             onDelete: React.MouseEventHandler<HTMLDivElement> | undefined
         }) => (
     <div
-        onClick={() => onClick(entry)}
+        onClick={ onClick}
         className={`flex items-center px-3 py-1 rounded cursor-pointer transition-colors ${activeEntryId === entry.id ? "bg-[#312f2f] text-white" : "hover:bg-[#312f2f]"
             }`}
     >
