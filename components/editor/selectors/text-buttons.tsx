@@ -6,47 +6,48 @@ import type { SelectorItem } from "./node-selector";
 
 export const TextButtons = () => {
   const { editor } = useEditor();
-  if (!editor) return null;
+  
+  if (!editor) return null; // Ensure editor exists before proceeding
+
   const items: SelectorItem[] = [
     {
       name: "bold",
-      isActive: (editor) => editor.isActive("bold"),
-      command: (editor) => editor.chain().focus().toggleBold().run(),
+      isActive: () => editor.isActive("bold"),
+      command: () => editor.chain().focus().toggleBold().run(),
       icon: BoldIcon,
     },
     {
       name: "italic",
-      isActive: (editor) => editor.isActive("italic"),
-      command: (editor) => editor.chain().focus().toggleItalic().run(),
+      isActive: () => editor.isActive("italic"),
+      command: () => editor.chain().focus().toggleItalic().run(),
       icon: ItalicIcon,
     },
     {
       name: "underline",
-      isActive: (editor) => editor.isActive("underline"),
-      command: (editor) => editor.chain().focus().toggleUnderline().run(),
+      isActive: () => editor.isActive("underline"),
+      command: () => editor.chain().focus().toggleUnderline().run(),
       icon: UnderlineIcon,
     },
     {
       name: "strike",
-      isActive: (editor) => editor.isActive("strike"),
-      command: (editor) => editor.chain().focus().toggleStrike().run(),
+      isActive: () => editor.isActive("strike"),
+      command: () => editor.chain().focus().toggleStrike().run(),
       icon: StrikethroughIcon,
     },
     {
       name: "code",
-      isActive: (editor) => editor.isActive("code"),
-      command: (editor) => editor.chain().focus().toggleCode().run(),
+      isActive: () => editor.isActive("code"),
+      command: () => editor.chain().focus().toggleCode().run(),
       icon: CodeIcon,
     },
   ];
+
   return (
     <div className="flex">
       {items.map((item) => (
         <EditorBubbleItem
           key={item.name}
-          onSelect={(editor) => {
-            item.command(editor);
-          }}
+          onSelect={() => item.command(editor)} // Pass editor instance as argument
         >
           <Button size="sm" className="rounded-none" variant="ghost" type="button">
             <item.icon

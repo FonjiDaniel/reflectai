@@ -11,6 +11,7 @@ export function isValidUrl(url: string) {
     new URL(url);
     return true;
   } catch (_e) {
+    console.error("Invalid URL", _e);
     return false;
   }
 }
@@ -21,6 +22,7 @@ export function getUrlFromString(str: string) {
       return new URL(`https://${str}`).toString();
     }
   } catch (_e) {
+    console.error("Invalid URL", _e);
     return null;
   }
 }
