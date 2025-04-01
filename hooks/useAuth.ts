@@ -28,14 +28,12 @@ export function useMyAuth(): UseAuthReturn {
       return;
     }
 
-    // In your useMyAuth hook
     const syncAuth = async (): Promise<void> => {
       try {
         const response = await fetch("/api/sync-auth");
         const data = (await response.json()) as AuthResponse;
 
         if (data.success && data.data) {
-          // TypeScript now knows data.data has user and token properties
           setAuth(data.data.user, data.data.token);
 
           document.cookie = `token=${data.data.token}; path=/; max-age=${7 * 24 * 60 * 60}; secure`;
