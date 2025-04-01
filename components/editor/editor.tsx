@@ -46,7 +46,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   const [initialContent, setInitialContent] = useState<null | JSONContent>(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [charsCount, setCharsCount] = useState();
-  const [editorContent, setEditorContent] = useState<JSONContent>(initialValue.content)
+  const [editorContent, setEditorContent] = useState<JSONContent>(initialValue.content) //
 
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
@@ -77,7 +77,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   //   return new XMLSerializer().serializeToString(doc);
   // };
 
-  
+
 
 
 
