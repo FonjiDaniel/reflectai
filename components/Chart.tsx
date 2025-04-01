@@ -16,7 +16,7 @@ const ChartComponent = () => {
   useEffect(() => {
     const getStats = async () => {
       try {
-        const stats = await getUserWritingStats(token);
+        const stats = await getUserWritingStats(token!);
         if (!stats) {
           console.error("Invalid stats response:", stats);
           return;

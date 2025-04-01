@@ -57,7 +57,7 @@ const Sidebar = () => {
     const diaryData = {
         title: "New page",
         description: "null",
-        createdBy: user?.id,
+        createdBy: user!.id,
     };
 
     const handleCreateLibrary = async (e: React.FormEvent) => {
@@ -171,7 +171,7 @@ const Sidebar = () => {
                                 isCollapsed={isCollapsed}
                                 activeEntryId={activeEntryId}
                                 onClick={() => handleEntryClick(entry)}
-                                onDelete={() => handleDeleteDiary(token, entry.id)} />
+                                onDelete={() => handleDeleteDiary(token!, entry.id)} />
                         ))
                     ) : (
                         <div className="flex p-5">No libraries found</div>
@@ -180,7 +180,7 @@ const Sidebar = () => {
             </div>
 
             {/* User Section */}
-            <UserSection user={user} isCollapsed={isCollapsed} handleLogout={handleLogout} />
+            <UserSection user={user!} isCollapsed={isCollapsed} handleLogout={handleLogout} />
         </div>
     );
 };

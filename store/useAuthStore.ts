@@ -2,7 +2,7 @@ import { create , StateCreator} from 'zustand';
 import { persist, PersistOptions, } from 'zustand/middleware';
 import { User } from '@/types/index';
 
-interface AuthState {
+export interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;

@@ -97,7 +97,7 @@ export const updateLibraryContent = async (
   metadata?: string
 ) => {
   try {
-    const body: Record<string, any> = {};
+    const body: Record<string, string | JSONContent> = {};
 
     if (title) body.title = title;
     if (content) body.content = content;

@@ -59,7 +59,7 @@ const Home = () => {
 
         {/* User Streak Section */}
         <section className='bg-transparent p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
-          <UserStreak userId={user.id} token={token} />
+          <UserStreak userId={user!.id} token={token!} />
         </section>
 
         {/* Writing Stats Chart Section */}
