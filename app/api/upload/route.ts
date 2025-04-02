@@ -3,7 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryUploadResult } from "@/types";
 import { config } from "@/lib/config";
 
-// Configure Cloudinary with your credentials
 cloudinary.config({
   cloud_name: config.cloudinaryCloudName,
   api_key: config.cloudinaryApiKey,

@@ -51,8 +51,8 @@ export async function GET(): Promise<NextResponse<AuthResponse>> {
 
 
 
-  } catch (error) {
-    console.error("Auth sync error:", error);
+  } catch (err) {
+    console.error("Auth sync error:", err);
     return NextResponse.json(
       { success: false, message: 'Failed to sync authentication' },
       { status: 500 }

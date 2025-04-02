@@ -119,7 +119,7 @@ export const updateLibraryContent = async (
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to update library content: ${res.statusText}`);
+      console.error(`Failed to update library content: ${res.statusText}`);
     }
 
     return await res.json();

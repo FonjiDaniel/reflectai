@@ -111,15 +111,6 @@ const Sidebar = () => {
 
         }
     }
-
-    useEffect(() => {
-        if (diaryEntries.length > 0) {
-            setActiveEntry(diaryEntries[0].id);
-            router.push(`/${diaryEntries[0].id}`);
-        }
-    }, [diaryEntries]);
-
-
     return (
         <div
             className={`flex flex-col h-screen bg-[#212121] border-r border-[#3b3a3a] text-[#a8a5a5] transition-all duration-200 ${isCollapsed ? "w-14" : "w-64"
