@@ -1,4 +1,3 @@
-// components/Sidebar/ShimmerEffect.tsx
 import React from 'react';
 
 const ShimmerEffect = () => {

@@ -28,8 +28,8 @@ export default function Page() {
       </Head>
       <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-10">
         {isLoading ? (
-          <p>Loading...</p>
-        ) :  content && content.content ? (
+          <div className="h-6 w-[50%] bg-[#312f2f] rounded-xl mt-4  animate-pulse"></div>
+        ) : content && content.content ? (
           <TailwindAdvancedEditor initialValue={content} key={param.diary} />
         ) : (
           <p>An error occurred. Refresh the page.</p>

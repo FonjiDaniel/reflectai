@@ -20,8 +20,7 @@ export async function GET(): Promise<NextResponse<AuthResponse>> {
     
     const name =
       clerkUser.username ||
-      `${clerkUser.firstName ?? ""} ${clerkUser.lastName ?? ""}`.trim() ||
-      "Unknown";
+      `${clerkUser.firstName ?? ""} ${clerkUser.lastName ?? ""}`.trim()
     const email = clerkUser.emailAddresses[0]?.emailAddress;
     
     if (!email) {
