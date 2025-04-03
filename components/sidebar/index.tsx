@@ -66,7 +66,8 @@ const Sidebar = () => {
 
         try {
             const newDiary = await createLibrary(diaryData, token);
-            if (!newDiary) console.error("Error creating diary");
+
+            if (!newDiary) toast.error("failed to create Diary");
 
             setDiaries(newDiary);
             setActiveEntry(newDiary.id);
@@ -99,18 +100,61 @@ const Sidebar = () => {
         logout();
         signOut();
     };
-
     const handleDeleteDiary = async (token: string, id: string) => {
+        const currentDiaries = useSidebarStore.getState().diaryEntries;
+        const currentActiveId = useSidebarStore.getState().activeEntryId;
+
+        const isDeletingActiveEntry = currentActiveId === id;
+        let nextActiveId: string | "" = "";
+        let shouldNavigate = false;
+
+        if (isDeletingActiveEntry) {
+            shouldNavigate = true;
+            const deletedIndex = currentDiaries.findIndex(diary => diary.id === id);
+
+            if (currentDiaries.length > 1) {
+                if (deletedIndex === 0) {
+                    nextActiveId = currentDiaries[1].id;
+                }
+                else if (deletedIndex > 0) {
+                    nextActiveId = currentDiaries[deletedIndex - 1].id;
+                }
+                else {
+                    nextActiveId = currentDiaries[0]?.id === id ? currentDiaries[1]?.id : currentDiaries[0]?.id;
+                }
+            }
+    
+        }
 
         try {
-            const deletedDiary = await deleteDiary(token, id)
-            if (deletedDiary?.id) toast.success("diary deleted successfull");
-            updateDiariesOnDelete(deletedDiary!);
-        } catch (err) {
-            console.log(err);
+            const deletedDiary = await deleteDiary(token, id);
 
+            if (!deletedDiary?.id) {
+                toast.error("Failed to delete diary on the server.");
+                console.error("Backend did not confirm diary deletion for ID:", id);
+                return; // Stop execution if backend failed
+            }
+
+            toast.success("Diary deleted successfully");
+            updateDiariesOnDelete(deletedDiary);
+
+            if (shouldNavigate) {
+                if (nextActiveId) {
+                    setActiveEntry(nextActiveId);
+                    router.push(`/${nextActiveId}`);
+                } else {
+                    setActiveEntry('');
+                    router.push("/home");
+                }
+            }
+
+        } catch (err) {
+            console.error("Error during diary deletion process:", err);
+            toast.error("An error occurred while deleting the diary.");
         }
-    }
+    };
+
+
     return (
         <div
             className={`flex flex-col h-screen bg-[#212121] border-r border-[#3b3a3a] text-[#a8a5a5] transition-all duration-200 ${isCollapsed ? "w-14" : "w-64"
@@ -162,7 +206,7 @@ const Sidebar = () => {
                                 isCollapsed={isCollapsed}
                                 activeEntryId={activeEntryId}
                                 onClick={() => handleEntryClick(entry)}
-                                onDelete={() => handleDeleteDiary(token!, entry.id)} />
+                                onDeleteClick={() => handleDeleteDiary(token!, entry.id)} />
                         ))
                     ) : (
                         <div className="flex p-5">No libraries found</div>
@@ -200,16 +244,19 @@ const SidebarEntry = (
         isCollapsed,
         activeEntryId,
         onClick,
-        onDelete }:
+        onDeleteClick }:
         {
             entry: Library,
             isCollapsed: boolean,
             activeEntryId: string | null,
             onClick: React.MouseEventHandler<HTMLDivElement>,
-            onDelete: React.MouseEventHandler<HTMLDivElement> | undefined
+            onDeleteClick: React.MouseEventHandler<HTMLButtonElement | HTMLDivElement>
         }) => (
     <div
-        onClick={ onClick}
+        onClick={(e) => {
+            e.stopPropagation();
+            onClick(e)
+        }}
         className={`flex items-center px-3 py-1 rounded cursor-pointer transition-colors ${activeEntryId === entry.id ? "bg-[#312f2f] text-white" : "hover:bg-[#312f2f]"
             }`}
     >
@@ -221,17 +268,20 @@ const SidebarEntry = (
                 </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button className="bg-transparent hover:bg-transparent">
+                        <Button className="bg-transparent hover:bg-transparent" onClick={(e) => e.stopPropagation()}>
                             <MoreHorizontalIcon className="h-2 w-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
                         <DropdownMenuGroup>
                             <DropdownMenuItem >
                                 <PencilLine />
                                 Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={onDelete}>
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteClick(e);
+                            }}>
                                 <Trash2 />
                                 Delete
                             </DropdownMenuItem>

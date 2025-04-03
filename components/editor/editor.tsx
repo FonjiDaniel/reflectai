@@ -45,7 +45,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   const [initialContent, setInitialContent] = useState<null | JSONContent>(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
-  const [charsCount, setCharsCount] = useState();
+  const [charsCount, setCharsCount] = useState(0);
   const [editorContent, setEditorContent] = useState<JSONContent>(initialValue.content) //
 
   const [openNode, setOpenNode] = useState(false);
@@ -56,6 +56,8 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editor = useEditor();
+  const isFirstRun = useRef(true);
+
 
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -65,47 +67,37 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
     }
   };
 
-
-  //Apply Codeblock Highlighting on the HTML from editor.getHTML()
-  // const highlightCodeblocks = (content: string) => {
-  //   const doc = new DOMParser().parseFromString(content, "text/html");
-  //   doc.querySelectorAll("pre code").forEach((el) => {
-  //     //@ts-ignore
-  //     // https://highlightjs.readthedocs.io/en/latest/api.html?highlight=highlightElement#highlightelement
-  //     hljs.highlightElement(el);
-  //   });
-  //   return new XMLSerializer().serializeToString(doc);
-  // };
-
-
-
-
-
   const socket = io(config.socketUrl, {
     auth: {
       token: token
     }
   });
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   const updateOnTitleChange = () => {
-  //     socket.emit("updateLibrary", {
-  //       id: initialValue.id,
-  //       title: title,
-  //       content: editorContent,
-  //       metadata: initialValue.metadata
+    if(isFirstRun.current) {
+  
+      isFirstRun.current = false;
+      return;
+    }
+    const updateOnTitleChange = () => {
+      socket.emit("updateLibrary", {
+        id: initialValue.id,
+        title: title,
+        content: editorContent,
+        metadata: initialValue.metadata,
+        wordCount: charsCount!
 
-  //     })
-  //   }
+      })
+    }
 
-  //   if (title) {
-  //     const debounce = setTimeout(updateOnTitleChange, 500);
-  //     return () => clearTimeout(debounce);
-  //   }
+    if (title) {
+      const debounce = setTimeout(updateOnTitleChange, 500);
+      return () => clearTimeout(debounce);
+    }
 
 
-  // }, [title])
+  }, [title])
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance | null) => {
     if(!editor) return;
@@ -127,7 +119,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
     setCharsCount(editor.storage.characterCount?.words() || 0);
 
 
-    // Ensure markdown storage exists before using it
+    // this ensures that markdown storage exists before using it
     if (editor.storage.markdown) {
       window.localStorage.setItem("markdown", editor.storage.markdown.getMarkdown());
     }
@@ -139,7 +131,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   useEffect(() => {
     if (initialValue && initialValue.content) {
       setInitialContent(initialValue.content);
-      // setEditorContent(initialValue.content); // Ensure updated content is set
+      // setEditorContent(initialValue.content);
       setTitle(initialValue.title);
     }
   }, [initialValue]);

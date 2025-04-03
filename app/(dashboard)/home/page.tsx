@@ -5,8 +5,6 @@ import RecentDiaries from '@/components/RecentDiaries'
 import ChartComponent from '@/components/Chart'
 import TrackingCalendar from '@/components/TrackingCalendar'
 import UserStreak from '@/components/UserStreak'
-import UserWordCount from '@/components/UserWordCount'
-import UserProgressCircle from '@/components/UserProgressCircle'
 
 import { Orbitron } from 'next/font/google';
 
@@ -46,17 +44,6 @@ const Home = () => {
             <RecentDiaries />
           </div>
         </div>
-
-        {/* Word Count Section */}
-        <section className='bg-transparent p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
-          <UserWordCount />
-        </section>
-
-        {/* Progress Circle Section */}
-        <section className='bg-transparent p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
-          <UserProgressCircle />
-        </section>
-
         {/* User Streak Section */}
         <section className='bg-transparent p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
           <UserStreak userId={user!.id} token={token!} />
@@ -70,7 +57,7 @@ const Home = () => {
 
         {/* Tracking Calendar Section */}
         
-        <section className='bg-transparent lg:col-span-2 p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
+        <section className='bg-transparent  p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
           <TrackingCalendar />
         </section>
       </div>
