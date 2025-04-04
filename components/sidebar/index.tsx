@@ -91,7 +91,6 @@ const Sidebar = () => {
     const handleEntryClick = useCallback(
         (entry: Library) => {
             setActiveEntry(entry.id);
-            router.push(`/${entry.id}`);
         },
         [setActiveEntry, router]
     );
@@ -176,7 +175,7 @@ const Sidebar = () => {
             </div>
 
             {/* Navigation Links */}
-            <div className="py-2">
+            <div className="py-2 px-2">
                 <SidebarLink href="/home" icon={Home} label="Home" isCollapsed={isCollapsed} />
                 <SidebarLink href="/settings" icon={Settings} label="Settings" isCollapsed={isCollapsed} />
             </div>
@@ -233,7 +232,7 @@ const SidebarLink = (
             isCollapsed: boolean
         }) => (
 
-    <Link href={href} className="flex items-center px-4 py-2 hover:bg-[#312f2f] transition-colors">
+    <Link href={href} className="flex items-center rounded-xl py-2 px-1 hover:bg-[#312f2f] transition-colors">
         <Icon className="h-4 w-4 mr-2" />
         {!isCollapsed && <span>{label}</span>}
     </Link>
@@ -249,23 +248,25 @@ const SidebarEntry = (
             entry: Library,
             isCollapsed: boolean,
             activeEntryId: string | null,
-            onClick: React.MouseEventHandler<HTMLDivElement>,
+            onClick: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement>,
             onDeleteClick: React.MouseEventHandler<HTMLButtonElement | HTMLDivElement>
         }) => (
     <div
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
             e.stopPropagation();
-            onClick(e)
         }}
-        className={`flex items-center px-3 py-1 rounded cursor-pointer transition-colors ${activeEntryId === entry.id ? "bg-[#312f2f] text-white" : "hover:bg-[#312f2f]"
+        className={`flex items-center px-3 py-1 p-3 rounded cursor-pointer transition-colors 
             }`}
     >
         {!isCollapsed ? (
-            <div className="flex items-center justify-between w-full group">
-                <div className="flex items-center gap-2 overflow-hidden">
+            <div className={`flex items-center justify-between w-full rounded-xl px-2 hover:bg-[#312f2f] group  ${activeEntryId === entry.id ? "bg-[#312f2f] text-white" : ""}`}>
+                <Link  onClick=
+                {(e) => {e.stopPropagation(); onClick(e);}
+
+                } className="flex items-center gap-2 overflow-hidden" href={`/${entry.id}`}>
                     {entry.icon && <div className="mr-2">{entry.icon}</div>}
                     <span className="text-sm truncate flex-grow">{entry.title}</span>
-                </div>
+                </Link>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button className="bg-transparent hover:bg-transparent" onClick={(e) => e.stopPropagation()}>
