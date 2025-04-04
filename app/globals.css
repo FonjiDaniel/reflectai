@@ -225,3 +225,13 @@ h3 {
 .border-shadow-left{
   background: linear-gradient(to right, rgba(22, 22, 22, 0.9), rgba(22, 22, 22, 0));
 }
+
+
+
+.welcome-text {
+  font-weight: bold;
+  display: inline-block;
+  background: linear-gradient(to right, #565964, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

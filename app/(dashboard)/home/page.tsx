@@ -5,8 +5,9 @@ import RecentDiaries from '@/components/RecentDiaries'
 import ChartComponent from '@/components/Chart'
 import TrackingCalendar from '@/components/TrackingCalendar'
 import UserStreak from '@/components/UserStreak'
+import { motion } from "framer-motion";
 
-import { Orbitron , Poppins} from 'next/font/google';
+import { Orbitron, Poppins } from 'next/font/google';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '700'] });
@@ -32,11 +33,16 @@ const Home = () => {
 
   return (
     <div className={`flex flex-col items-center scrollbar-custom ${poppins.className}`}>
-      <div className='flex justify-center mt-10'>
-        <p className={`text-3xl font-semibold text-[#b7bdc1] ${orbitron.className}`}>
+      <motion.div className='flex justify-center mt-10'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}>
+        <p className={`text-3xl font-semibold welcome-text text-[#b7bdc1] ${orbitron.className}`}
+
+        >
           {`Good ${timeOfDay}, ${user?.name}`}
         </p>
-      </div>
+      </motion.div>
 
       <div className='grid grid-cols-1 lg:grid-cols-3 md:grid-cols-1 gap-8 mt-10 w-full max-w-6xl'>
         {/* Full Width Recent Diaries Section - First Row */}
@@ -57,7 +63,7 @@ const Home = () => {
         </section>
 
         {/* Tracking Calendar Section */}
-        
+
         <section className='bg-transparent  p-5 rounded-xl shadow-md border border-[#3b3a3a]'>
           <TrackingCalendar />
         </section>
