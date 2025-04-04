@@ -6,6 +6,12 @@ import Tooltip from '@mui/material/Tooltip';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { getUserWritingStats } from '@/lib/actions/library';
 import { useMyAuth } from '@/hooks/useAuth';
+import { Poppins } from 'next/font/google';
+
+
+// const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '700'] });
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
+
 
 const WritingTrackerCalendar: React.FC<WritingTrackerCalendarProps> = ({
     year,
@@ -52,11 +58,11 @@ const WritingTrackerCalendar: React.FC<WritingTrackerCalendarProps> = ({
     };
 
     return (
-        <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md flex flex-col w-full max-w-2xl mx-auto">
-            <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-2 sm:mb-4 text-center">Writing Tracker</h2>
+        <div className=" p-4 sm:p-1 md:p-3 rounded-lg shadow-md flex flex-col w-full text-brand max-w-2xl mx-auto">
+            <p className={`mb-2  text-lg font-semibold sm:mb-4 text-center flex items-start ${poppins.className}`}>Writing Tracker</p>
             
             <div className="flex justify-between items-center mb-2 sm:mb-4">
-                <h3 className="text-sm sm:text-md md:text-lg font-medium">{format(startDate, 'MMMM yyyy')}</h3>
+                <p className="text-sm sm:text-md md:text-lg font-medium">{format(startDate, 'MMMM yyyy')}</p>
                 <div className="flex space-x-1 sm:space-x-2">
                     <button 
                         title="Previous month" 
@@ -106,14 +112,10 @@ const WritingTrackerCalendar: React.FC<WritingTrackerCalendarProps> = ({
                                         rounded-full flex items-center justify-center 
                                         cursor-pointer transition
                                         pt-[100%]
-                                        ${entry ? getProgressColor(entry.word_count) : 'bg-gray-100 hover:bg-gray-200'}
+                                        ${entry ? getProgressColor(entry.word_count) : 'bg-white hover:bg-gray-200'}
                                     `}
-                                    // style={{
-                                    //     // Ensure element remains circular with padding based on its width
-                                    //     paddingTop: '100%'
-                                    // }}
                                 >
-                                    <span className="absolute inset-0 flex items-center justify-center text-xs">
+                                    <span className="absolute inset-0 flex items-center justify-center text-xs text-black">
                                         {format(day, 'd')}
                                     </span>
                                     {entry && entry.word_count > 0 && (

@@ -19,20 +19,10 @@ const UserStreakComponent = ({ userId, token }: { userId: string, token: string 
 
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">🔥 Writing Streak</h2>
-            <p className="text-gray-600">You rock! You are on a <strong>{streak[0]?.current_streak}-day streak</strong>!</p>
-            <p className="text-gray-500">Longest Streak: {streak && streak[0]?.longest_streak} days</p>
-
-
-            <div className="bg-white p-4 rounded-lg shadow-md">
-                <div className="flex items-center">
-                    <h3 className="text-xl font-semibold">🔥 {streak[0]?.current_streak} Day Streak</h3>
-                </div>
-                <p className="text-gray-500">Longest Streak: {streak[0]?.longest_streak} days</p>
-            </div>
-
-
+        <div className="p-4  rounded-lg text-brand flex flex-col gap-4 max-sm:gap-2">
+            <p className="text-lg font-semibold">Writing Streak</p>
+            <p className="">Current Streak! You are on a <strong>{streak[0]?.current_streak}-day streak</strong>!</p>
+            <p className="">Longest Streak: {streak && streak[0]?.longest_streak} days</p>
 
             <div className="flex items-center gap-1">
                 {[...Array(7)].map((_, i) => (

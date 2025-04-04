@@ -152,13 +152,13 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
           defaultValue={title!}
           onKeyDown={handleKeyDown}
           ref={titleRef}
-          className="border-none bg-transparent p-3 text-[#b7bdc1] dark:text-[#E4E4E7] text-3xl font-bold outline-none focus:border-transparent focus:text-3xl transition-all duration-300 ease-in-out 
+          className="border-none bg-transparent p-3 max-sm:text-xl text-[#b7bdc1] dark:text-[#E4E4E7] text-2xl font-bold outline-none focus:border-transparent focus:text-3xl transition-all duration-300 ease-in-out 
              focus:scale-105 "
         />
 
 
       </div>
-      <div className="flex absolute right-5 top-5 z-10 mb-5 gap-2">
+      <div className="lg:flex absolute right-5 top-5 z-10 mb-5 gap-2 hidden ">
         <div className="rounded-lg bg-gray-700 px-2 py-1 text-sm text-muted-foreground text-[#c2baba]">{saveStatus}</div>
         <div className={charsCount ? "rounded-lg bg-accent px-2 py-1 text-sm bg-gray-700 text-[#bbb9b9] text-muted-foreground" : "hidden"}>
           {charsCount} Words

@@ -6,8 +6,9 @@ import ChartComponent from '@/components/Chart'
 import TrackingCalendar from '@/components/TrackingCalendar'
 import UserStreak from '@/components/UserStreak'
 
-import { Orbitron } from 'next/font/google';
+import { Orbitron , Poppins} from 'next/font/google';
 
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '700'] });
 
 const Home = () => {
@@ -30,7 +31,7 @@ const Home = () => {
   }, [])
 
   return (
-    <div className='flex flex-col items-center scrollbar-custom'>
+    <div className={`flex flex-col items-center scrollbar-custom ${poppins.className}`}>
       <div className='flex justify-center mt-10'>
         <p className={`text-3xl font-semibold text-[#b7bdc1] ${orbitron.className}`}>
           {`Good ${timeOfDay}, ${user?.name}`}

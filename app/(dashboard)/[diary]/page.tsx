@@ -26,7 +26,7 @@ export default function Page() {
       <Head>
         <title>{isLoading ? "Loading..." : "Diary"}</title>
       </Head>
-      <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-10">
+      <div className="flex min-h-screen flex-col items-center gap-4 py-4 max-sm:px-0">
         {isLoading ? (
           <div className="h-6 w-[50%] bg-[#312f2f] rounded-xl mt-4  animate-pulse"></div>
         ) : content && content.content ? (
