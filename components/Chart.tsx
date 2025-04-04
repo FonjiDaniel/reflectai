@@ -11,20 +11,24 @@ const ChartComponent = () => {
   const chartInstance = useRef <Chart | null >(null);
   const [stat, setStat] = useState<WritingStats[]>([]);
   const { user, token } = useMyAuth();
+  const [loadingData, setLoadingData] = useState(false);
   
 
   useEffect(() => {
     const getStats = async () => {
       try {
+        setLoadingData(true)
         const stats = await getUserWritingStats(token!);
         if (!stats) {
           console.error("Invalid stats response:", stats);
           return;
         }
-
+         setLoadingData(false)
         setStat(stats);
+
       } catch (error) {
         console.error("Error fetching user stats:", error);
+        setLoadingData(false);
       }
     };
 
@@ -46,7 +50,6 @@ const ChartComponent = () => {
         return !isNaN(date.getTime()) ? date.toLocaleDateString() : "Invalid Date";
       });
       const dataValues = stat.map((item) => item.word_count);
-      console.log("data values are ", dataValues);
 
       chartInstance.current = new Chart(ctx, {
         type: "bar",
@@ -107,7 +110,7 @@ const ChartComponent = () => {
     };
   }, [stat]);
 
-  return stat.length> 0 ? <canvas ref={chartRef} /> : <div className="text-[#676969]">No data to show</div>
+  return  loadingData ?  <div className="text-[#676969]">Loading stats</div> : stat.length>0 &&  <canvas ref={chartRef} />
 };
 
 export default ChartComponent;

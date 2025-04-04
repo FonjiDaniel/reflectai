@@ -6,11 +6,11 @@ import { Book, ChevronLeft, ChevronRight, Timer, LucideProps } from "lucide-reac
 import { timeAgo } from "@/lib/utils";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { Library } from "@/types";
-import { getLibraries } from "@/lib/actions/library";
+import { getDiaries } from "@/lib/actions/library";
 import { notFound, useRouter } from "next/navigation";
 import useSWR from "swr";
 
-const fetcher = (token: string) => getLibraries(token);
+const fetcher = (token: string) => getDiaries(token);
 
 const RecentDiaries = () => {
   const { token, } = useMyAuth();
@@ -35,7 +35,7 @@ const RecentDiaries = () => {
 
   const handleScroll = () => {
     if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      const { scrollLeft, scrollWidth,  clientWidth } = scrollRef.current;
       setShowLeftShadow(scrollLeft > 0);
       setShowRightShadow(scrollLeft < scrollWidth - clientWidth - 10);
     }

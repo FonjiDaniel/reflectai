@@ -111,7 +111,7 @@ const Sidebar = () => {
         if (isDeletingActiveEntry) {
             shouldNavigate = true;
             const deletedIndex = currentDiaries.findIndex(diary => diary.id === id);
-
+            // this logic calculates the next diary to be active after deleting the current active diary.
             if (currentDiaries.length > 1) {
                 if (deletedIndex === 0) {
                     nextActiveId = currentDiaries[1].id;
@@ -123,7 +123,7 @@ const Sidebar = () => {
                     nextActiveId = currentDiaries[0]?.id === id ? currentDiaries[1]?.id : currentDiaries[0]?.id;
                 }
             }
-    
+
         }
 
         try {
@@ -132,7 +132,7 @@ const Sidebar = () => {
             if (!deletedDiary?.id) {
                 toast.error("Failed to delete diary on the server.");
                 console.error("Backend did not confirm diary deletion for ID:", id);
-                return; // Stop execution if backend failed
+                return;
             }
 
             toast.success("Diary deleted successfully");
@@ -149,8 +149,8 @@ const Sidebar = () => {
             }
 
         } catch (err) {
-            console.error("Error during diary deletion process:", err);
-            toast.error("An error occurred while deleting the diary.");
+            console.error("an unexpected errror occured", err)
+            toast.error("An err");
         }
     };
 

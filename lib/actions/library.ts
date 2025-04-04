@@ -32,7 +32,7 @@ export const createLibrary = async (
   }
 };
 
-export const getLibraries = async (token: string): Promise<Library[]> => {
+export const getDiaries = async (token: string): Promise<Library[]> => {
   try {
     await new Promise((timer) => setTimeout(timer, 2000));
     const response = await fetch(`${config.backendBaseUrl}/libraries`, {

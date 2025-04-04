@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Library } from "@/types";
-import { getLibraries } from "@/lib/actions/library";
+import { getDiaries } from "@/lib/actions/library";
 
 interface SidebarState {
   isCollapsed: boolean;
@@ -33,7 +33,7 @@ export const useSidebarStore = create<SidebarState>()(
           if (token) {
             set({ loadingDiaries: true });
             try {
-              const diary = await getLibraries(token);
+              const diary = await getDiaries(token);
               set({ diaryEntries: diary });
             } catch (err) {
               console.error("Error in fetchDiaryEntries:", err);
