@@ -187,12 +187,12 @@ h1 {
 
 h2 {
   font-size: 1.75rem !important;
-  font-weight: bold !important;
+  font-weight: normal !important;
 }
 
 h3 {
   font-size: 1.5rem !important;
-  font-weight: bold !important;
+  font-weight: 100 !important;
 }
 
 
