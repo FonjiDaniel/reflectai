@@ -6,17 +6,23 @@ import DiaryClient from "./diaryClient";
 import type { Metadata } from 'next';
 
 
-export async function generateMetadata({ params }: { params: { diary: string } }): Promise<Metadata> {
-  const {diary : diaryId} = await params;
-  
+interface PageProps {
+  params: {
+    diary: string;
+  };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+ const  diaryId = params.diary
+
   return {
     title: diaryId,
   };
 }
 
-export default async function Page({ params }: { params: Promise<{ diary: string }> }) {
+export default async function Page({ params }: PageProps ) {
   const { token } = await getServerAuthData();
-  const { diary: diaryId } = await params;
+  const diaryId  = params.diary
 
   if (!token) {
     return <p>Not authenticated.</p>;
