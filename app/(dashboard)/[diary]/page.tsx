@@ -1,40 +1,39 @@
-"use client";
+
 import React from "react";
-import TailwindAdvancedEditor from "@/components/editor/editor";
-import { notFound, useParams } from "next/navigation";
-import { useMyAuth } from "@/hooks/useAuth";
-import Head from "next/head";
-import useSWR from "swr";
 import { getDiaryContent } from "@/lib/actions/library";
+import { getServerAuthData } from "@/lib/actions/user";
+import DiaryClient from "./diaryClient";
+import type { Metadata } from 'next';
 
-const fetcher = (id: string, token: string) =>
-  getDiaryContent(id, token);
 
-export default function Page() {
-  const { token } = useMyAuth();
-  const param = useParams<{ diary: string }>();
+export async function generateMetadata({ params }: { params: { diary: string } }): Promise<Metadata> {
+  const {diary : diaryId} = await params;
+  
+  return {
+    title: diaryId,
+  };
+}
 
-  const { data: content, error, isLoading } = useSWR(
-    param.diary && token ? [param.diary, token] : null,
-    ([id, token,]) => fetcher(id, token)
-  );
+export default async function Page({ params }: { params: Promise<{ diary: string }> }) {
+  const { token } = await getServerAuthData();
+  const { diary: diaryId } = await params;
 
-  if (error) return notFound();
+  if (!token) {
+    return <p>Not authenticated.</p>;
+  }
+
+  let initialContent;
+  try {
+    initialContent = await getDiaryContent(diaryId, token);
+  } catch (error) {
+    console.error("Failed to fetch diary content:", error);
+    return <p>Failed to load diary content. Please try again</p>;
+  }
+
 
   return (
-    <>
-      <Head>
-        <title>{isLoading ? "Loading..." : "Diary"}</title>
-      </Head>
-      <div className="flex min-h-screen flex-col items-center gap-4 py-4 max-sm:px-0">
-        {isLoading ? (
-          <div className="h-6 w-[50%] bg-[#312f2f] rounded-xl mt-4  animate-pulse"></div>
-        ) : content && content.content ? (
-          <TailwindAdvancedEditor initialValue={content} key={param.diary} />
-        ) : (
-          <p>An error occurred. Refresh the page.</p>
-        )}
-      </div>
-    </>
+    <div className="flex min-h-screen flex-col items-center gap-4 py-4 max-sm:px-0">
+      <DiaryClient initialContent={initialContent} diaryId={diaryId} />
+    </div>
   );
 }

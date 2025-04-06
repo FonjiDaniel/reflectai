@@ -9,7 +9,6 @@ import { useMyAuth } from '@/hooks/useAuth';
 import { Poppins } from 'next/font/google';
 
 
-// const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '700'] });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
 
@@ -167,7 +166,7 @@ export default function Page() {
             {loading ? <div className="text-gray-500 text-center">Loading...</div> : (
                 <WritingTrackerCalendar
                     year={new Date().getFullYear()}
-                    month={new Date().getMonth() + 1}
+                    month={new Date().getMonth() +1 }
                     entries={stat}
                 />
             )}
