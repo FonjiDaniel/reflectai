@@ -30,7 +30,6 @@ import { uploadFn } from "./image-upload";
 import { TextButtons } from "./selectors/text-buttons";
 import { slashCommand, suggestionItems } from "./slash-command";
 
-// import hljs from "highlight.js";
 import { useMyAuth } from "@/hooks/useAuth";
 import io from "socket.io-client"
 import { config } from "@/lib/config";
@@ -52,7 +51,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
   const [openAI, setOpenAI] = useState(false);
-  const [title, setTitle] = useState<string | null>( initialValue.title);
+  const [title, setTitle] = useState<string | null>(initialValue.title);
 
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editor = useEditor();
@@ -62,7 +61,7 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === "ArrowDown") {
-      event.preventDefault(); 
+      event.preventDefault();
       editor.editor?.commands.focus()
     }
   };
@@ -75,8 +74,8 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
 
   useEffect(() => {
 
-    if(isFirstRun.current) {
-  
+    if (isFirstRun.current) {
+
       isFirstRun.current = false;
       return;
     }
@@ -100,9 +99,9 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   }, [title])
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance | null) => {
-    if(!editor) return;
+    if (!editor) return;
 
-  const updatedContent = editor.getJSON();
+    const updatedContent = editor.getJSON();
 
 
     socket.emit("updateLibrary", {
@@ -113,13 +112,16 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
       wordCount: editor.storage.characterCount?.words() || 0
 
     })
-    mutate([initialValue.id, token], {...initialValue, ...updatedContent, title: title, }, true)
-    setEditorContent(updatedContent);  
+
+    mutate(
+      [initialValue.id, token],
+      { ...initialValue, content: updatedContent, title: title },
+      false
+    );
+    setEditorContent(updatedContent);
 
     setCharsCount(editor.storage.characterCount?.words() || 0);
 
-
-    // this ensures that markdown storage exists before using it
     if (editor.storage.markdown) {
       window.localStorage.setItem("markdown", editor.storage.markdown.getMarkdown());
     }
@@ -131,13 +133,12 @@ const TailwindAdvancedEditor = ({ initialValue }: JSONContent) => {
   useEffect(() => {
     if (initialValue && initialValue.content) {
       setInitialContent(initialValue.content);
-      // setEditorContent(initialValue.content);
       setTitle(initialValue.title);
     }
   }, [initialValue]);
 
 
-  
+
 
 
   if (!initialContent) return null;

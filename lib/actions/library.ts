@@ -1,4 +1,9 @@
-import { createLibraryProps, Library, UserStreak, WritingStats } from "@/types/index";
+import {
+  createLibraryProps,
+  Library,
+  UserStreak,
+  WritingStats,
+} from "@/types/index";
 import { config } from "../config";
 import { JSONContent } from "novel";
 
@@ -34,7 +39,7 @@ export const createLibrary = async (
 
 export const getDiaries = async (token: string): Promise<Library[]> => {
   try {
-    await new Promise((timer) => setTimeout(timer, 2000));
+    // await new Promise((timer) => setTimeout(timer, 2000));
     const response = await fetch(`${config.backendBaseUrl}/libraries`, {
       method: "GET",
       headers: {
@@ -168,7 +173,10 @@ export const getUserWritingStats = async (
   }
 };
 
-export const getUserStreak = async (userId: string, token: string) : Promise<UserStreak[]> => {
+export const getUserStreak = async (
+  userId: string,
+  token: string
+): Promise<UserStreak[]> => {
   try {
     const response = await fetch(`${config.backendBaseUrl}/streak/${userId}`, {
       headers: {
@@ -178,16 +186,17 @@ export const getUserStreak = async (userId: string, token: string) : Promise<Use
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch streak: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch streak: ${response.status} ${response.statusText}`
+      );
     }
 
-    const streak : UserStreak[] = await response.json();
+    const streak: UserStreak[] = await response.json();
     console.log("Streak data is:", streak);
 
     return streak;
   } catch (err) {
     console.error("Error fetching streak:", err);
-    return []; 
+    return [];
   }
 };
-
