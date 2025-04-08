@@ -8,6 +8,7 @@ import UserStreak from '@/components/UserStreak'
 import { motion } from "framer-motion";
 
 import { Orbitron, Poppins } from 'next/font/google';
+import { getTimeOfDay } from '@/lib/utils'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '700'] });
@@ -17,18 +18,8 @@ const Home = () => {
   const [timeOfDay, setTimeOfDay] = useState<string>('');
 
   useEffect(() => {
-    const getTimeOfDay = () => {
-      const time = new Date().getHours();
-      const hour = time;
-      if (hour < 12) {
-        setTimeOfDay("Morning")
-      } else if (hour < 18) {
-        setTimeOfDay("Afternoon");
-      } else {
-        setTimeOfDay("Evening");
-      }
-    }
-    getTimeOfDay();
+
+    setTimeOfDay(getTimeOfDay());
   }, [])
 
   return (

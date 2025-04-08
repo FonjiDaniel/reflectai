@@ -30,18 +30,16 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   const { completion, complete, isLoading } = useCompletion({
     api: "/api/generate",
     onResponse: async (response) => {
-      console.log("API Response:", response.json());
-  
       if (response.status === 429) {
         toast.error("You have reached your request limit for the day.");
         return;
       }
-  
-      // Avoid reading response.text() since it's likely already handled internally
     },
-    onError: (e) => {
-      console.error("Error in completion:", e);
-      toast.error(e.message);
+    onError: (error) => {
+      console.error("AI Error:", error);
+      toast.error(
+        error.message || "An error occurred while processing your request"
+      );
     },
   });
   

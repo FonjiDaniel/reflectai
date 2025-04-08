@@ -20,3 +20,15 @@ export const timeAgo = (dateString: string):string => {
   return `${formatDistanceToNow(date, { addSuffix: true })}`;
 
 }
+
+export const  getTimeOfDay = () => {
+  const time = new Date().getHours();
+  const hour = time;
+  if (hour < 12) {
+   return "Morning"
+  } else if (hour < 18) {
+      return "Afternoon"
+  } else {
+    return "Evening"
+  }
+}
