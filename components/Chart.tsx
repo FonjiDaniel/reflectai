@@ -110,7 +110,7 @@ const ChartComponent = () => {
     };
   }, [stat]);
 
-  return  loadingData ?  <div className="text-[#676969]">Loading stats</div> : stat.length>0 &&  <canvas ref={chartRef} />
+  return  loadingData ?  <div className="text-brand">Loading..</div> : stat.length>0 &&  <canvas ref={chartRef} />
 };
 
 export default ChartComponent;

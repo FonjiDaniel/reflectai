@@ -192,7 +192,6 @@ export const getUserStreak = async (
     }
 
     const streak: UserStreak[] = await response.json();
-    console.log("Streak data is:", streak);
 
     return streak;
   } catch (err) {

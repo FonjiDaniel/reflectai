@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { WritingStats, WritingTrackerCalendarProps } from '@/types';
 import Tooltip from '@mui/material/Tooltip';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { getUserWritingStats } from '@/lib/actions/library';
 import { useMyAuth } from '@/hooks/useAuth';
 import { Poppins } from 'next/font/google';
+import { toast } from 'sonner';
 
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
@@ -39,8 +40,24 @@ const WritingTrackerCalendar: React.FC<WritingTrackerCalendarProps> = ({
         if (currentMonth === 1) setCurrentYear(prev => prev - 1);
     };
 
-    const handleDateClick = (date: Date) => {
-        console.log('Clicked date:', date);
+    const handleDateClick = (date: Date, wordCount: string) => {
+        toast.message(
+            <div className="flex items-center justify-between">
+            <p className="flex items-center justify-center">{`${format(date, 'EEEE-dd-MMMM-yyyy')} :  ${wordCount}`}</p>
+            <button
+            title='close'
+                onClick={() => toast.dismiss()}
+                className="ml-4 text-sm text-red-500 hover:underline"
+            >
+                <X className="h-4 w-4" />
+            </button>
+            </div>,
+            {
+            position: 'bottom-center',
+            }
+        );
+        
+        
     };
 
     const entryMap = new Map(entries.map(entry => [entry.entry_date, entry]));
@@ -53,7 +70,7 @@ const WritingTrackerCalendar: React.FC<WritingTrackerCalendarProps> = ({
         if (progress < 50) return 'bg-green-200';
         if (progress < 75) return 'bg-green-300';
         if (progress < 100) return 'bg-green-400';
-        if (progress === 100) return 'bg-green-600';
+        if (progress >= 100) return 'bg-green-600';
     };
 
     return (
@@ -102,7 +119,7 @@ const WritingTrackerCalendar: React.FC<WritingTrackerCalendarProps> = ({
                         <div
                             key={dateString}
                             className="aspect-square flex justify-center items-center"
-                            onClick={() => handleDateClick(day)}
+                            onClick={() => handleDateClick(day, entry ? `${entry.word_count} words` : '0 words')}
                         >
                             <Tooltip title={entry ? `${entry.word_count} words` : '0 words'} arrow>
                                 <div
@@ -163,7 +180,7 @@ export default function Page() {
 
     return (
         <div className="container mx-auto p-2 sm:p-4">
-            {loading ? <div className="text-gray-500 text-center">Loading...</div> : (
+            {loading ? <div className="text-brand text-center">Loading...</div> : (
                 <WritingTrackerCalendar
                     year={new Date().getFullYear()}
                     month={new Date().getMonth() +1 }

@@ -2,7 +2,8 @@
 
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import { useMyAuth } from "@/hooks/useAuth";
-import { Book, ChevronLeft, ChevronRight, Timer, LucideProps } from "lucide-react";
+import { Book, ChevronLeft, ChevronRight, Timer, LucideProps, } from "lucide-react";
+import Link from "next/link";
 import { timeAgo } from "@/lib/utils";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { Library } from "@/types";
@@ -17,7 +18,7 @@ const RecentDiaries = () => {
   const { setActiveEntry } = useSidebarStore();
   const router = useRouter();
 
-  // Fetch data with SWR
+
   const { data: diaries, error, isLoading } = useSWR(token ? token : null, fetcher);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -56,7 +57,6 @@ const RecentDiaries = () => {
   const handleEntryClick = useCallback(
     (entry: Library) => {
       setActiveEntry(entry.id);
-      router.push(`/${entry.id}`);
     },
     [setActiveEntry, router]
   );
@@ -117,8 +117,8 @@ const RecentDiaries = () => {
 export default RecentDiaries;
 
 const DiaryEntry = ({ icon: Icon, diary, onClick }: { icon: React.FC<LucideProps>; diary: Library; onClick: (entry: Library) => void }) => (
-  <div
-    onClick={() => onClick(diary)}
+  <Link href={`/${diary.id}`}  onClick={() => onClick(diary)}>  <div
+   
     className="relative flex flex-col justify-between items-start w-[150px] h-[150px] p-4 text-[#b7bdc1] rounded-xl bg-[#312f2f] hover:cursor-pointer"
   >
     <div className="relative z-10 flex flex-col justify-between flex-shrink-0 items-start w-full overflow-hidden h-full">
@@ -127,6 +127,8 @@ const DiaryEntry = ({ icon: Icon, diary, onClick }: { icon: React.FC<LucideProps
       <p className="text-xs text-gray-500">{timeAgo(diary?.updated_at)}</p>
     </div>
   </div>
+  </Link>
+
 );
 
 const DiaryEntryShimmer = () => <div className="h-[150px] w-full rounded bg-[#312f2f] animate-pulse mr-2"></div>;

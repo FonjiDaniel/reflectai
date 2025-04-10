@@ -41,7 +41,7 @@ export const useSidebarStore = create<SidebarState>()(
               set({ loadingDiaries: false });
             }
           } else {
-            console.log("Missing token or user ID for fetching diaries");
+            console.error("Missing token or user ID for fetching diaries");
           }
 
           const { activeEntryId } = get();
