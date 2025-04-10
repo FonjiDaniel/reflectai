@@ -21,7 +21,7 @@ export async function POST(req: Request): Promise<Response> {
       });
     }
 
-    if (process.env.redis_KV_REST_API_URL && process.env.redis_KV_REST_API_TOKEN) {
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
 
       const {user} = await getServerAuthData();
 
