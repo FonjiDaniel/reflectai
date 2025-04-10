@@ -36,6 +36,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { toast } from "sonner";
 
+
 const Sidebar = () => {
     const { logout, user, token } = useMyAuth();
     const { signOut } = useAuth();
@@ -67,7 +68,11 @@ const Sidebar = () => {
         try {
             const newDiary = await createLibrary(diaryData, token);
 
-            if (!newDiary) toast.error("failed to create Diary");
+            if (!newDiary) {
+
+                toast.error("failed to create Diary");
+                return ;
+            } 
 
             setDiaries(newDiary);
             setActiveEntry(newDiary.id);
@@ -95,9 +100,18 @@ const Sidebar = () => {
         [setActiveEntry, router]
     );
 
+
+    const deleteCookie = (name: string) => {
+        document.cookie = `${name}=; Max-Age=0;`;
+      };
+
     const handleLogout = () => {
+
+        deleteCookie("token");
+        deleteCookie("user");
         logout();
         signOut();
+
     };
     const handleDeleteDiary = async (token: string, id: string) => {
         const currentDiaries = useSidebarStore.getState().diaryEntries;
@@ -149,7 +163,7 @@ const Sidebar = () => {
 
         } catch (err) {
             console.error("an unexpected errror occured", err)
-            toast.error("An err");
+            toast.error("An errkor occured. Unabale to delete diary");
         }
     };
 
