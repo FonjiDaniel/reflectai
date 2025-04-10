@@ -63,7 +63,7 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
             }
           }}
           value="continue"
-          className="gap-2 px-4"
+          className="gap-2 px-4 text-gray-300"
         >
           <StepForward className="h-4 w-4 text-purple-500" />
           Continue writing

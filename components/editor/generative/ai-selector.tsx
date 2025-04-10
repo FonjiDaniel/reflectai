@@ -23,7 +23,7 @@ interface AISelectorProps {
 }
 
 export function AISelector({ onOpenChange }: AISelectorProps) {
-  const { editor } = useEditor();  
+  const { editor } = useEditor();
   const [inputValue, setInputValue] = useState("");
 
 
@@ -31,19 +31,17 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
     api: "/api/generate",
     onResponse: async (response) => {
       if (response.status === 429) {
-        toast.error("You have reached your request limit for the day.");
         return;
       }
     },
     onError: (error) => {
-      console.error("AI Error:", error);
       toast.error(
-        error.message || "An error occurred while processing your request"
+        error.message
       );
     },
   });
-  
-  
+
+
 
   const hasCompletion = completion.length > 0;
   if (!editor) return null;

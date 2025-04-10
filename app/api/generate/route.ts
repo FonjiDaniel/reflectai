@@ -53,8 +53,6 @@ export async function POST(req: Request): Promise<Response> {
       return new Response("Missing required fields: prompt or option", { status: 400 });
     }
 
-    console.error("the request is: ", { prompt, option, command });
-
 
     const messages: CoreMessage[] = match(option)
       .with("continue", () => [

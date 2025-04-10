@@ -15,7 +15,7 @@ const AICompletionCommands = ({
     <>
       <CommandGroup>
         <CommandItem
-          className="gap-2 px-4"
+          className="gap-2 px-4 text-gray-300"
           value="replace"
           onSelect={() => {
             const selection = editor.view.state.selection;
