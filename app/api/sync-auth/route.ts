@@ -57,4 +57,4 @@ export async function GET(): Promise<NextResponse<AuthResponse>> {
       { status: 500 }
     );
   }
-}
+} 

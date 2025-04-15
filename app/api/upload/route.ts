@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
   
   if (!config.cloudinaryApiKey || !config.cloudinaryApiSecret || !config.cloudinaryCloudName) {
-    return new Response("Missing Cloudinary credentials. Don't forget to add them to your .env file.", {
+    return new Response("Missing Cloudinary credentials", {
       status: 401,
     });
   }
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         {
           folder: 'reflectai Images',
           resource_type: 'auto',
-          public_id: filename.split('.')[0], // Use filename without extension as public_id
+          public_id: filename.split('.')[0],
         },
         (error, result) => {
           if (error) reject(error);

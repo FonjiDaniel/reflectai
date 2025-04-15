@@ -222,7 +222,7 @@ const Sidebar = () => {
                                 onDeleteClick={() => handleDeleteDiary(token!, entry.id)} />
                         ))
                     ) : (
-                        <div className="flex p-5">No libraries found</div>
+                        <div className="flex p-5">No diaries yet</div>
                     )}
                 </div>
             </div>
@@ -239,7 +239,7 @@ const SidebarLink = (
         icon: Icon,
         label,
         isCollapsed }:
-        {
+        { 
             href: string,
             icon: React.FC<LucideProps>,
             label: string,
