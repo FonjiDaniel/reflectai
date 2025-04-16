@@ -9,7 +9,7 @@ interface AnimatedSectionProps {
     initial?: string;
     whileInView?: string;
     viewport?: object;
-    tag?: keyof typeof motion; // Use valid motion component keys
+    tag?: keyof typeof motion;
 }
 
 const defaultFadeIn: Variants = {
@@ -26,7 +26,7 @@ export default function AnimatedSection({
     viewport = { once: true },
     tag = 'div'
 }: AnimatedSectionProps) {
-    // Safely get the motion component with fallback to div
+
     const MotionComponent = (motion[tag as keyof typeof motion] ?? motion.div) as React.ElementType;
     
     return (

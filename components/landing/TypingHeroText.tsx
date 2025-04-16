@@ -4,7 +4,7 @@ import React from 'react';
 import { TypeAnimation } from 'react-type-animation';
 
 interface TypingHeroTextProps {
-    textLines: (string | number)[]; // Array of strings and pause durations
+    textLines: (string | number)[]; 
     className?: string;
     highlightClassName?: string;
 }

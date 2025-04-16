@@ -54,11 +54,11 @@ export default function AppHeader({ logoSrc, logoAlt, siteName }: AppHeaderProps
             <Link href="/#demo" className={navItemClasses}>Demo</Link>
             <Link href="/#contact" className={navItemClasses}>Contact</Link>
             
-              <Link href="/login"
+              <a href="/login"
                 className="bg-white text-purple-700 px-4 py-2 rounded-full font-medium hover:bg-purple-100 transition-colors shadow-sm"
               >
                 Login
-              </Link>
+              </a>
           
           </motion.ul>
         </nav>

@@ -234,13 +234,13 @@ export default function LandingPage() {
                 ReflectAI is your intelligent companion that analyzes your journal entries, tracks emotional patterns, and guides your personal growth journey.
               </p>
               <div className="mt-12 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center">
-                <Link
+                <a
                   href="/signup"
                   className="inline-flex items-center justify-center bg-gradient-to-r from-purple-700 to-indigo-600 text-white py-4 px-10 rounded-lg shadow-lg hover:shadow-xl transition-transform hover:scale-105 active:scale-95 font-medium text-xl"
                 >
                   Get Started Free
                   <ArrowRight className="ml-3 h-6 w-6" />
-                </Link>
+                </a>
                 <Link
                   href="/#demo"
                   className="inline-flex items-center justify-center bg-white text-purple-700 border border-purple-200 py-4 px-10 rounded-lg shadow-md hover:shadow-lg transition-transform hover:scale-105 active:scale-95 font-medium text-xl"
@@ -388,13 +388,13 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h3 className="text-4xl font-bold">Start Your Journey Today</h3>
             <p className="mt-4 text-xl text-purple-100">Join thousands who are discovering new insights about themselves every day.</p>
-            <Link
+            <a
               href="/signup"
               className="mt-8 inline-flex items-center justify-center bg-white text-purple-700 py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-transform hover:scale-105 active:scale-95 font-medium text-lg"
             >
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+            </a>
           </div>
         </div>
       </section>
