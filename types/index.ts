@@ -22,6 +22,7 @@ export interface LibraryEntry {
     message: string;
     data?: {
       token: string;
+      refreshToken: string;
       user: User;
     };
   }
@@ -45,8 +46,8 @@ export interface LibraryEntry {
     description: string;
     icon: string | null;
     color: string | null;
-    created_at: string; // ISO date string
-    updated_at: string; // ISO date string
+    created_at: string; 
+    updated_at: string; 
     created_by: string;
     last_edited_by: string | null;
     parent_id: string | null;
@@ -54,7 +55,7 @@ export interface LibraryEntry {
     is_public: boolean;
     ai_generated: boolean;
     ai_prompt: string | null;
-    ai_settings: JSONContent | null; // Adjust type if ai_settings has a defined structure
+    ai_settings: JSONContent | null; 
   }
   
 
@@ -87,5 +88,14 @@ export interface LibraryEntry {
     onDateClick?: (date: Date) => void;
   }
   
+
+  export interface RefreshResponse {
+    success: boolean,
+    message: string,
+    data : {
+      token: string,
+      refreshToken: string
+    }
+  }
 
   

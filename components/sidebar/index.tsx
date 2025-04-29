@@ -71,8 +71,8 @@ const Sidebar = () => {
             if (!newDiary) {
 
                 toast.error("failed to create Diary");
-                return ;
-            } 
+                return;
+            }
 
             setDiaries(newDiary);
             setActiveEntry(newDiary.id);
@@ -103,14 +103,16 @@ const Sidebar = () => {
 
     const deleteCookie = (name: string) => {
         document.cookie = `${name}=; Max-Age=0;`;
-      };
+    };
 
     const handleLogout = () => {
 
         deleteCookie("token");
         deleteCookie("user");
+        deleteCookie("refreshToken");
         logout();
         signOut();
+        toast.success("Auth Section ended");
 
     };
     const handleDeleteDiary = async (token: string, id: string) => {
@@ -239,7 +241,7 @@ const SidebarLink = (
         icon: Icon,
         label,
         isCollapsed }:
-        { 
+        {
             href: string,
             icon: React.FC<LucideProps>,
             label: string,
@@ -274,10 +276,10 @@ const SidebarEntry = (
     >
         {!isCollapsed ? (
             <div className={`flex items-center justify-between w-full rounded-xl px-2 hover:bg-[#312f2f] group  ${activeEntryId === entry.id ? "bg-[#312f2f] text-white" : ""}`}>
-                <Link  onClick=
-                {(e) => {e.stopPropagation(); onClick(e);}
+                <Link onClick=
+                    {(e) => { e.stopPropagation(); onClick(e); }
 
-                } className="flex items-center gap-2 overflow-hidden" href={`/${entry.id}`}>
+                    } className="flex items-center gap-2 overflow-hidden" href={`/${entry.id}`}>
                     {entry.icon && <div className="mr-2">{entry.icon}</div>}
                     <span className="text-sm truncate flex-grow">{entry.title}</span>
                 </Link>

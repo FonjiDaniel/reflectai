@@ -4,15 +4,15 @@ import {
   UserStreak,
   WritingStats,
 } from "@/types/index";
-import { config } from "../config";
 import { JSONContent } from "novel";
+import { apiClient } from "../apiClient";
 
 export const createLibrary = async (
   libraryData: createLibraryProps,
   token: string
 ) => {
   try {
-    const response = await fetch(`${config.backendBaseUrl}/library`, {
+    const response = await apiClient(`/library`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -39,8 +39,7 @@ export const createLibrary = async (
 
 export const getDiaries = async (token: string): Promise<Library[]> => {
   try {
-    // await new Promise((timer) => setTimeout(timer, 2000));
-    const response = await fetch(`${config.backendBaseUrl}/libraries`, {
+    const response = await apiClient("/libraries", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,8 +66,8 @@ export const getDiaries = async (token: string): Promise<Library[]> => {
 
 export const getDiaryContent = async (id: string, token: string) => {
   try {
-    const response = await fetch(
-      `${config.backendBaseUrl}/library/content/${id}`,
+    const response = await apiClient(
+      `/library/content/${id}`,
       {
         method: "GET",
         headers: {
@@ -114,7 +113,7 @@ export const updateLibraryContent = async (
       );
     }
 
-    const res = await fetch(`${config.backendBaseUrl}/library/content/${id}`, {
+    const res = await apiClient(`/library/content/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -136,8 +135,8 @@ export const updateLibraryContent = async (
 
 export const deleteDiary = async (token: string, id: string) => {
   try {
-    const response = await fetch(
-      `${config.backendBaseUrl}/library/delete/${id}`,
+    const response = await apiClient(
+      `/library/delete/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -158,7 +157,7 @@ export const getUserWritingStats = async (
   token: string
 ): Promise<WritingStats[]> => {
   try {
-    const response = await fetch(`${config.backendBaseUrl}/stats`, {
+    const response = await apiClient(`/stats`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -178,7 +177,7 @@ export const getUserStreak = async (
   token: string
 ): Promise<UserStreak[]> => {
   try {
-    const response = await fetch(`${config.backendBaseUrl}/streak/${userId}`, {
+    const response = await apiClient(`/streak/${userId}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

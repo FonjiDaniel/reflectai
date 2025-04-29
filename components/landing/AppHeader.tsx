@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react'; // Icons for mobile menu
+import { Menu, X } from 'lucide-react';
 
 interface AppHeaderProps {
   logoSrc: string;
@@ -18,7 +18,7 @@ export default function AppHeader({ logoSrc, logoAlt, siteName }: AppHeaderProps
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   const navItemClasses = "font-medium hover:text-purple-200 transition-colors py-2 md:py-0";
-  const mobileNavItemClasses = `${navItemClasses} block px-4 text-lg`; // Specific styles for mobile
+  const mobileNavItemClasses = `${navItemClasses} block px-4 text-lg`; 
 
   return (
     <header className=" text-white  bg-[rgba(102,59,138,0.5)] backdrop-blur-md t py-4 md:py-5 sticky top-0 z-50 shadow-md transition-all duration-300">
